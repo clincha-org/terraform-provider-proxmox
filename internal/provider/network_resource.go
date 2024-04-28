@@ -14,7 +14,7 @@ var (
 	_ resource.ResourceWithConfigure = &networkResource{}
 )
 
-type NetworkModel struct {
+type NetworkResourceModel struct {
 	Gateway     string   `tfsdk:"gateway"`
 	Type        string   `tfsdk:"type"`
 	Autostart   int      `tfsdk:"autostart"`
@@ -114,8 +114,33 @@ func (r networkResource) Schema(ctx context.Context, request resource.SchemaRequ
 }
 
 func (r networkResource) Create(ctx context.Context, request resource.CreateRequest, response *resource.CreateResponse) {
-	//TODO implement me
-	panic("implement me")
+	var plan NetworkResourceModel
+	diags := request.Plan.Get(ctx, &plan)
+	response.Diagnostics.Append(diags...)
+	if response.Diagnostics.HasError() {
+		return
+	}
+
+	var network = proxmox.Network{
+		Gateway:     plan.Gateway,
+		Type:        plan.Type,
+		Autostart:   plan.Autostart,
+		Families:    plan.Families,
+		Method6:     plan.Method6,
+		Iface:       plan.Iface,
+		BridgeFd:    plan.BridgeFd,
+		Netmask:     plan.Netmask,
+		Priority:    plan.Priority,
+		Active:      plan.Active,
+		Method:      plan.Method,
+		BridgeStp:   plan.BridgeStp,
+		Address:     plan.Address,
+		Cidr:        plan.Cidr,
+		BridgePorts: plan.BridgePorts,
+	}
+
+	net, err := r.client.CreateNetwork()
+
 }
 
 func (r networkResource) Read(ctx context.Context, request resource.ReadRequest, response *resource.ReadResponse) {
