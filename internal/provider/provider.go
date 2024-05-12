@@ -167,7 +167,7 @@ func (p *proxmoxProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	tflog.Debug(ctx, "Creating Proxmox client")
 	// Create a new HashiCups client using the configuration values
-	client, err := proxmox.NewClient(&host, &username, &password)
+	client, err := proxmox.NewClient(host, username, password)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to Create HashiCups API Client",

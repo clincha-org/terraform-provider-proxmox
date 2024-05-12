@@ -128,11 +128,10 @@ func (d *nodeDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 			Maxdisk:        types.Int64Value(node.Maxdisk),
 			Level:          types.StringValue(node.Level),
 		}
-
 		state.Nodes = append(state.Nodes, nodeState)
 	}
 
-	diags := resp.State.Set(ctx, &state)
+	diags := resp.State.Set(ctx, state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
