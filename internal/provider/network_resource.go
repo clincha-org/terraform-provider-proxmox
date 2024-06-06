@@ -7,7 +7,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"strconv"
 )
 
 var (
@@ -16,41 +20,21 @@ var (
 )
 
 type NetworkResourceModel struct {
-	Interface              types.String `tfsdk:"iface"`
-	Type                   types.String `tfsdk:"type"`
-	Address                types.String `tfsdk:"address"`
-	Address6               types.String `tfsdk:"address6"`
-	Autostart              types.Int64  `tfsdk:"autostart"`
-	BondPrimary            types.String `tfsdk:"bond_primary"`
-	BondMode               types.String `tfsdk:"bond_mode"`
-	BondMiiMon             types.String `tfsdk:"bond_miimon"`
-	BondTransmitHashPolicy types.String `tfsdk:"bond_xmit_hash_policy"`
-	BridgePorts            types.String `tfsdk:"bridge_ports"`
-	BridgeVlanAware        types.Int64  `tfsdk:"bridge_vlan_aware"`
-	CIDR                   types.String `tfsdk:"cidr"`
-	CIDR6                  types.String `tfsdk:"cidr6"`
-	Comments               types.String `tfsdk:"comments"`
-	Comments6              types.String `tfsdk:"comments6"`
-	Gateway                types.String `tfsdk:"gateway"`
-	Gateway6               types.String `tfsdk:"gateway6"`
-	MTU                    types.Int64  `tfsdk:"mtu"`
-	Netmask                types.String `tfsdk:"netmask"`
-	Netmask6               types.String `tfsdk:"netmask6"`
-	OVSBonds               types.String `tfsdk:"ovs_bonds"`
-	OVSBridge              types.String `tfsdk:"ovs_bridge"`
-	OVSOptions             types.String `tfsdk:"ovs_options"`
-	OVSPorts               types.String `tfsdk:"ovs_ports"`
-	OVSTag                 types.String `tfsdk:"ovs_tag"`
-	Slaves                 types.String `tfsdk:"slaves"`
-	VlanID                 types.Int64  `tfsdk:"vlan_id"`
-	VlanRawDevice          types.String `tfsdk:"vlan_raw_device"`
-	Families               types.List   `tfsdk:"families"`
-	Method                 types.String `tfsdk:"method"`
-	Method6                types.String `tfsdk:"method6"`
-	BridgeFd               types.String `tfsdk:"bridge_fd"`
-	Priority               types.Int64  `tfsdk:"priority"`
-	Active                 types.Int64  `tfsdk:"active"`
-	BridgeStp              types.String `tfsdk:"bridge_stp"`
+	Interface       types.String `tfsdk:"interface"`
+	Type            types.String `tfsdk:"type"`
+	Address         types.String `tfsdk:"address"`
+	Autostart       types.Bool   `tfsdk:"autostart"`
+	BridgePorts     types.String `tfsdk:"bridge_ports"`
+	BridgeVlanAware types.Bool   `tfsdk:"bridge_vlan_aware"`
+	CIDR            types.String `tfsdk:"cidr"`
+	Comments        types.String `tfsdk:"comments"`
+	Gateway         types.String `tfsdk:"gateway"`
+	MTU             types.Int64  `tfsdk:"mtu"`
+	Netmask         types.String `tfsdk:"netmask"`
+	VlanID          types.Int64  `tfsdk:"vlan_id"`
+	Families        types.List   `tfsdk:"families"`
+	Method          types.String `tfsdk:"method"`
+	Active          types.Bool   `tfsdk:"active"`
 }
 
 type networkResource struct {
@@ -86,8 +70,11 @@ func (r *networkResource) Metadata(ctx context.Context, request resource.Metadat
 func (r *networkResource) Schema(ctx context.Context, request resource.SchemaRequest, response *resource.SchemaResponse) {
 	response.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"iface": schema.StringAttribute{
+			"interface": schema.StringAttribute{
 				Required: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"type": schema.StringAttribute{
 				Required: true,
@@ -96,26 +83,7 @@ func (r *networkResource) Schema(ctx context.Context, request resource.SchemaReq
 				Optional: true,
 				Computed: true,
 			},
-			"address6": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"autostart": schema.Int64Attribute{
-				Optional: true,
-				Computed: true,
-			},
-			"bond_primary": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"bond_mode": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"bond_miimon": schema.StringAttribute{
-				Computed: true,
-			},
-			"bond_xmit_hash_policy": schema.StringAttribute{
+			"autostart": schema.BoolAttribute{
 				Optional: true,
 				Computed: true,
 			},
@@ -123,7 +91,7 @@ func (r *networkResource) Schema(ctx context.Context, request resource.SchemaReq
 				Optional: true,
 				Computed: true,
 			},
-			"bridge_vlan_aware": schema.Int64Attribute{
+			"bridge_vlan_aware": schema.BoolAttribute{
 				Optional: true,
 				Computed: true,
 			},
@@ -131,23 +99,11 @@ func (r *networkResource) Schema(ctx context.Context, request resource.SchemaReq
 				Optional: true,
 				Computed: true,
 			},
-			"cidr6": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
 			"comments": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
 			},
-			"comments6": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
 			"gateway": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"gateway6": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
 			},
@@ -159,39 +115,7 @@ func (r *networkResource) Schema(ctx context.Context, request resource.SchemaReq
 				Optional: true,
 				Computed: true,
 			},
-			"netmask6": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"ovs_bonds": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"ovs_bridge": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"ovs_options": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"ovs_ports": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"ovs_tag": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"slaves": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
-			},
 			"vlan_id": schema.Int64Attribute{
-				Optional: true,
-				Computed: true,
-			},
-			"vlan_raw_device": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
 			},
@@ -202,19 +126,7 @@ func (r *networkResource) Schema(ctx context.Context, request resource.SchemaReq
 			"method": schema.StringAttribute{
 				Computed: true,
 			},
-			"method6": schema.StringAttribute{
-				Computed: true,
-			},
-			"bridge_fd": schema.StringAttribute{
-				Computed: true,
-			},
-			"priority": schema.Int64Attribute{
-				Computed: true,
-			},
-			"active": schema.Int64Attribute{
-				Computed: true,
-			},
-			"bridge_stp": schema.StringAttribute{
+			"active": schema.BoolAttribute{
 				Computed: true,
 			},
 		},
@@ -229,34 +141,21 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 		return
 	}
 
+	autostart := plan.Autostart.ValueBool()
+	bridgeVlanAware := plan.BridgeVlanAware.ValueBool()
 	networkRequest := proxmox.NetworkRequest{
-		Interface:              plan.Interface.ValueString(),
-		Type:                   plan.Type.ValueString(),
-		Address:                plan.Address.ValueString(),
-		Address6:               plan.Address6.ValueString(),
-		AutoStart:              plan.Autostart.ValueInt64(),
-		BondPrimary:            plan.BondPrimary.ValueString(),
-		BondMode:               plan.BondMode.ValueString(),
-		BondTransmitHashPolicy: plan.BondTransmitHashPolicy.ValueString(),
-		BridgePorts:            plan.BridgePorts.ValueString(),
-		BridgeVlanAware:        plan.BridgeVlanAware.ValueInt64(),
-		CIDR:                   plan.CIDR.ValueString(),
-		CIDR6:                  plan.CIDR6.ValueString(),
-		Comments:               plan.Comments.ValueString(),
-		Comments6:              plan.Comments6.ValueString(),
-		Gateway:                plan.Gateway.ValueString(),
-		Gateway6:               plan.Gateway6.ValueString(),
-		MTU:                    plan.MTU.ValueInt64(),
-		Netmask:                plan.Netmask.ValueString(),
-		Netmask6:               plan.Netmask6.ValueString(),
-		OVSBonds:               plan.OVSBonds.ValueString(),
-		OVSBridge:              plan.OVSBridge.ValueString(),
-		OVSOptions:             plan.OVSOptions.ValueString(),
-		OVSPorts:               plan.OVSPorts.ValueString(),
-		OVSTag:                 plan.OVSTag.ValueString(),
-		Slaves:                 plan.Slaves.ValueString(),
-		VlanID:                 plan.VlanID.ValueInt64(),
-		VlanRawDevice:          plan.VlanRawDevice.ValueString(),
+		Interface:       plan.Interface.ValueString(),
+		Type:            plan.Type.ValueString(),
+		Address:         plan.Address.ValueString(),
+		AutoStart:       &autostart,
+		BridgePorts:     plan.BridgePorts.ValueString(),
+		BridgeVlanAware: &bridgeVlanAware,
+		CIDR:            plan.CIDR.ValueString(),
+		Comments:        plan.Comments.ValueString(),
+		Gateway:         plan.Gateway.ValueString(),
+		MTU:             plan.MTU.ValueInt64(),
+		Netmask:         plan.Netmask.ValueString(),
+		VlanID:          plan.VlanID.ValueInt64(),
 	}
 
 	node := proxmox.Node{
@@ -273,40 +172,20 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 	}
 
 	state := NetworkResourceModel{
-		Interface:              types.StringValue(network.Interface),
-		Type:                   types.StringValue(network.Type),
-		Address:                types.StringValue(network.Address),
-		Address6:               types.StringValue(network.Address6),
-		Autostart:              types.Int64Value(network.Autostart),
-		BondPrimary:            types.StringValue(network.BondPrimary),
-		BondMode:               types.StringValue(network.BondMode),
-		BondMiiMon:             types.StringValue(network.BondMiiMon),
-		BondTransmitHashPolicy: types.StringValue(network.BondTransmitHashPolicy),
-		BridgePorts:            types.StringValue(network.BridgePorts),
-		BridgeVlanAware:        types.Int64Value(network.BridgeVlanAware),
-		CIDR:                   types.StringValue(network.CIDR),
-		CIDR6:                  types.StringValue(network.CIDR6),
-		Comments:               types.StringValue(network.Comments),
-		Comments6:              types.StringValue(network.Comments6),
-		Gateway:                types.StringValue(network.Gateway),
-		Gateway6:               types.StringValue(network.Gateway6),
-		MTU:                    types.Int64Value(network.MTU),
-		Netmask:                types.StringValue(network.Netmask),
-		Netmask6:               types.StringValue(network.Netmask6),
-		OVSBonds:               types.StringValue(network.OVSBonds),
-		OVSBridge:              types.StringValue(network.OVSBridge),
-		OVSOptions:             types.StringValue(network.OVSOptions),
-		OVSPorts:               types.StringValue(network.OVSPorts),
-		OVSTag:                 types.StringValue(network.OVSTag),
-		Slaves:                 types.StringValue(network.Slaves),
-		VlanID:                 types.Int64Value(network.VlanID),
-		VlanRawDevice:          types.StringValue(network.VlanRawDevice),
-		Method:                 types.StringValue(network.Method),
-		Method6:                types.StringValue(network.Method6),
-		BridgeFd:               types.StringValue(network.BridgeFd),
-		Priority:               types.Int64Value(network.Priority),
-		Active:                 types.Int64Value(network.Active),
-		BridgeStp:              types.StringValue(network.BridgeStp),
+		Interface:       types.StringValue(network.Interface),
+		Type:            types.StringValue(network.Type),
+		Address:         types.StringValue(network.Address),
+		Autostart:       types.BoolValue(network.Autostart == 1),
+		BridgePorts:     types.StringValue(network.BridgePorts),
+		BridgeVlanAware: types.BoolValue(network.BridgeVlanAware == 1),
+		CIDR:            types.StringValue(network.CIDR),
+		Comments:        types.StringValue(network.Comments),
+		Gateway:         types.StringValue(network.Gateway),
+		MTU:             types.Int64Value(network.MTU),
+		Netmask:         types.StringValue(strconv.FormatInt(network.Netmask, 10)),
+		VlanID:          types.Int64Value(network.VlanID),
+		Method:          types.StringValue(network.Method),
+		Active:          types.BoolValue(network.Active == 1),
 	}
 	var familiesStrings []attr.Value
 	for _, family := range network.Families {
@@ -340,40 +219,20 @@ func (r *networkResource) Read(ctx context.Context, request resource.ReadRequest
 	}
 
 	state = NetworkResourceModel{
-		Interface:              types.StringValue(network.Interface),
-		Type:                   types.StringValue(network.Type),
-		Address:                types.StringValue(network.Address),
-		Address6:               types.StringValue(network.Address6),
-		Autostart:              types.Int64Value(network.Autostart),
-		BondPrimary:            types.StringValue(network.BondPrimary),
-		BondMode:               types.StringValue(network.BondMode),
-		BondMiiMon:             types.StringValue(network.BondMiiMon),
-		BondTransmitHashPolicy: types.StringValue(network.BondTransmitHashPolicy),
-		BridgePorts:            types.StringValue(network.BridgePorts),
-		BridgeVlanAware:        types.Int64Value(network.BridgeVlanAware),
-		CIDR:                   types.StringValue(network.CIDR),
-		CIDR6:                  types.StringValue(network.CIDR6),
-		Comments:               types.StringValue(network.Comments),
-		Comments6:              types.StringValue(network.Comments6),
-		Gateway:                types.StringValue(network.Gateway),
-		Gateway6:               types.StringValue(network.Gateway6),
-		MTU:                    types.Int64Value(network.MTU),
-		Netmask:                types.StringValue(network.Netmask),
-		Netmask6:               types.StringValue(network.Netmask6),
-		OVSBonds:               types.StringValue(network.OVSBonds),
-		OVSBridge:              types.StringValue(network.OVSBridge),
-		OVSOptions:             types.StringValue(network.OVSOptions),
-		OVSPorts:               types.StringValue(network.OVSPorts),
-		OVSTag:                 types.StringValue(network.OVSTag),
-		Slaves:                 types.StringValue(network.Slaves),
-		VlanID:                 types.Int64Value(network.VlanID),
-		VlanRawDevice:          types.StringValue(network.VlanRawDevice),
-		Method:                 types.StringValue(network.Method),
-		Method6:                types.StringValue(network.Method6),
-		BridgeFd:               types.StringValue(network.BridgeFd),
-		Priority:               types.Int64Value(network.Priority),
-		Active:                 types.Int64Value(network.Active),
-		BridgeStp:              types.StringValue(network.BridgeStp),
+		Interface:       types.StringValue(network.Interface),
+		Type:            types.StringValue(network.Type),
+		Address:         types.StringValue(network.Address),
+		Autostart:       types.BoolValue(network.Autostart == 1),
+		BridgePorts:     types.StringValue(network.BridgePorts),
+		BridgeVlanAware: types.BoolValue(network.BridgeVlanAware == 1),
+		CIDR:            types.StringValue(network.CIDR),
+		Comments:        types.StringValue(network.Comments),
+		Gateway:         types.StringValue(network.Gateway),
+		MTU:             types.Int64Value(network.MTU),
+		Netmask:         types.StringValue(strconv.FormatInt(network.Netmask, 10)),
+		VlanID:          types.Int64Value(network.VlanID),
+		Method:          types.StringValue(network.Method),
+		Active:          types.BoolValue(network.Active == 1),
 	}
 	var familiesStrings []attr.Value
 	for _, family := range network.Families {
@@ -397,6 +256,70 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 		return
 	}
 
+	autostart := plan.Autostart.ValueBool()
+	bridgeVlanAware := plan.BridgeVlanAware.ValueBool()
+	networkRequest := proxmox.NetworkRequest{
+		Interface:       plan.Interface.ValueString(),
+		Type:            plan.Type.ValueString(),
+		Address:         plan.Address.ValueString(),
+		AutoStart:       &autostart,
+		BridgePorts:     plan.BridgePorts.ValueString(),
+		BridgeVlanAware: &bridgeVlanAware,
+		CIDR:            plan.CIDR.ValueString(),
+		Comments:        plan.Comments.ValueString(),
+		Gateway:         plan.Gateway.ValueString(),
+		MTU:             plan.MTU.ValueInt64(),
+		Netmask:         plan.Netmask.ValueString(),
+		VlanID:          plan.VlanID.ValueInt64(),
+	}
+
+	node := proxmox.Node{
+		Node: "pve",
+	}
+
+	tflog.Debug(ctx, fmt.Sprintf("Plan (Autostart) before network update %+v", plan.Autostart))
+
+	network, err := r.client.UpdateNetwork(&node, &networkRequest)
+	if err != nil {
+		response.Diagnostics.AddError(
+			"Error creating network",
+			"Could not create network, unexpected error: "+err.Error(),
+		)
+		return
+	}
+
+	tflog.Debug(ctx, fmt.Sprintf("Network (Autostart) after network update %+v", network.Autostart))
+
+	plan = NetworkResourceModel{
+		Interface:       types.StringValue(network.Interface),
+		Type:            types.StringValue(network.Type),
+		Address:         types.StringValue(network.Address),
+		Autostart:       types.BoolValue(network.Autostart == 1),
+		BridgePorts:     types.StringValue(network.BridgePorts),
+		BridgeVlanAware: types.BoolValue(network.BridgeVlanAware == 1),
+		CIDR:            types.StringValue(network.CIDR),
+		Comments:        types.StringValue(network.Comments),
+		Gateway:         types.StringValue(network.Gateway),
+		MTU:             types.Int64Value(network.MTU),
+		Netmask:         types.StringValue(strconv.FormatInt(network.Netmask, 10)),
+		VlanID:          types.Int64Value(network.VlanID),
+		Method:          types.StringValue(network.Method),
+		Active:          types.BoolValue(network.Active == 1),
+	}
+	var familiesStrings []attr.Value
+	for _, family := range network.Families {
+		familiesStrings = append(familiesStrings, types.StringValue(family))
+	}
+	plan.Families, diags = types.ListValue(types.StringType, familiesStrings)
+	response.Diagnostics.Append(diags...)
+
+	tflog.Debug(ctx, fmt.Sprintf("State (Autostart) after state set %+v", plan.Autostart))
+
+	diags = response.State.Set(ctx, plan)
+	response.Diagnostics.Append(diags...)
+	if response.Diagnostics.HasError() {
+		return
+	}
 }
 
 func (r *networkResource) Delete(ctx context.Context, request resource.DeleteRequest, response *resource.DeleteResponse) {
