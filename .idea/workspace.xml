@@ -4,15 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="add idea">
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="tidied">
+      <change afterPath="$PROJECT_DIR$/internal/provider/network_resource_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/provider/node_data_source_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/example_data_source.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/example_data_source_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/example_function.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/example_function_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/example_resource.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/example_resource_test.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/node_data_source.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/node_data_source.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/provider.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/provider_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
   </component>
   <component name="GOROOT" url="file:///usr/lib/go-1.22" />
   <component name="Git.Settings">
@@ -44,6 +64,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Test.Test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
@@ -56,6 +78,7 @@
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/clincha/IdeaProjects/terraform-provider-proxmox/internal/provider",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,6 +88,20 @@
   }
 }]]></component>
   <component name="RunManager" selected="Terraform.Apply">
+    <configuration name="Test" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="terraform-provider-proxmox" />
+      <working_directory value="$PROJECT_DIR$" />
+      <parameters value="-count=1 -v" />
+      <envs>
+        <env name="TF_ACC" value="1" />
+      </envs>
+      <kind value="DIRECTORY" />
+      <package value="terraform-provider-proxmox" />
+      <directory value="$PROJECT_DIR$/internal/provider" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
     <configuration name="Apply" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Apply" show_console_on_std_err="false" show_console_on_std_out="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="envs">
@@ -94,6 +131,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Go Test.Test" />
       <item itemvalue="Terraform.Plan" />
       <item itemvalue="Terraform.Apply" />
     </list>
@@ -118,7 +156,7 @@
       <workItem from="1717832557286" duration="1820000" />
       <workItem from="1717836221060" duration="1353000" />
       <workItem from="1717844986476" duration="303000" />
-      <workItem from="1717845293282" duration="748000" />
+      <workItem from="1717845293282" duration="5650000" />
     </task>
     <task id="LOCAL-00001" summary="add idea">
       <option name="closed" value="true" />
@@ -128,7 +166,23 @@
       <option name="project" value="LOCAL" />
       <updated>1717706806955</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added delete functionality">
+      <option name="closed" value="true" />
+      <created>1717846181099</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1717846181099</updated>
+    </task>
+    <task id="LOCAL-00003" summary="tidied">
+      <option name="closed" value="true" />
+      <created>1717846213686</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1717846213686</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +190,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="add idea" />
+    <MESSAGE value="added delete functionality" />
+    <MESSAGE value="tidied" />
+    <option name="LAST_COMMIT_MESSAGE" value="tidied" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

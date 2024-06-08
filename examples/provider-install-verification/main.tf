@@ -21,9 +21,10 @@ output "edu_nodes" {
 resource "proxmox_network" "vmbr88" {
   interface = "vmbr88"
   type      = "bridge"
-  address = "10.2.0.34"
-  netmask = "255.255.255.0"
+  address   = "10.1.2.3"
+  netmask   = "255.255.255.0"
   autostart = false
+  comments  = "Terraform created network"
 }
 
 output "vmbr88" {

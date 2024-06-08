@@ -24,6 +24,7 @@ type NodeModel struct {
 }
 
 type Node struct {
+	ID             types.String  `tfsdk:"id"`
 	Type           types.String  `tfsdk:"type"`
 	Maxcpu         types.Int64   `tfsdk:"max_cpu"`
 	Cpu            types.Float64 `tfsdk:"cpu"`
@@ -31,7 +32,6 @@ type Node struct {
 	Maxmem         types.Int64   `tfsdk:"max_memory"`
 	SslFingerprint types.String  `tfsdk:"ssl_fingerprint"`
 	Mem            types.Int64   `tfsdk:"memory"`
-	Id             types.String  `tfsdk:"id"`
 	Node           types.String  `tfsdk:"node"`
 	Disk           types.Int64   `tfsdk:"disk"`
 	Uptime         types.Int64   `tfsdk:"uptime"`
@@ -54,6 +54,9 @@ func (d *nodeDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Computed: true,
+						},
 						"type": schema.StringAttribute{
 							Computed: true,
 						},
@@ -73,9 +76,6 @@ func (d *nodeDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, r
 							Computed: true,
 						},
 						"memory": schema.Int64Attribute{
-							Computed: true,
-						},
-						"id": schema.StringAttribute{
 							Computed: true,
 						},
 						"node": schema.StringAttribute{
@@ -121,7 +121,7 @@ func (d *nodeDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 			Maxmem:         types.Int64Value(int64(node.Maxmem)),
 			SslFingerprint: types.StringValue(node.SslFingerprint),
 			Mem:            types.Int64Value(int64(node.Mem)),
-			Id:             types.StringValue(node.Id),
+			ID:             types.StringValue(node.Id),
 			Node:           types.StringValue(node.Node),
 			Disk:           types.Int64Value(node.Disk),
 			Uptime:         types.Int64Value(int64(node.Uptime)),

@@ -170,10 +170,10 @@ func (p *proxmoxProvider) Configure(ctx context.Context, req provider.ConfigureR
 	client, err := proxmox.NewClient(host, username, password)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to Create HashiCups API Client",
-			"An unexpected error occurred when creating the HashiCups API client. "+
+			"Unable to Create Proxmox API Client",
+			"An unexpected error occurred when creating the Proxmox API client. "+
 				"If the error is not clear, please contact the provider developers.\n\n"+
-				"HashiCups Client Error: "+err.Error(),
+				"Proxmox Client Error: "+err.Error(),
 		)
 		return
 	}

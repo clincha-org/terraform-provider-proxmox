@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/clincha-org/proxmox-api/pkg/proxmox"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -14,8 +15,9 @@ import (
 )
 
 var (
-	_ resource.Resource              = &networkResource{}
-	_ resource.ResourceWithConfigure = &networkResource{}
+	_ resource.Resource                = &networkResource{}
+	_ resource.ResourceWithConfigure   = &networkResource{}
+	_ resource.ResourceWithImportState = &networkResource{}
 )
 
 type NetworkResourceModel struct {
@@ -38,6 +40,10 @@ type NetworkResourceModel struct {
 
 type networkResource struct {
 	client *proxmox.Client
+}
+
+func (r *networkResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("interface"), request, response)
 }
 
 func (r *networkResource) Configure(_ context.Context, request resource.ConfigureRequest, response *resource.ConfigureResponse) {
@@ -142,6 +148,7 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 
 	autostart := plan.Autostart.ValueBool()
 	bridgeVlanAware := plan.BridgeVlanAware.ValueBool()
+	comments := plan.Comments.ValueString()
 	networkRequest := proxmox.NetworkRequest{
 		Interface:       plan.Interface.ValueString(),
 		Type:            plan.Type.ValueString(),
@@ -150,7 +157,7 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 		BridgePorts:     plan.BridgePorts.ValueString(),
 		BridgeVlanAware: &bridgeVlanAware,
 		CIDR:            plan.CIDR.ValueString(),
-		Comments:        plan.Comments.ValueString(),
+		Comments:        &comments,
 		Gateway:         plan.Gateway.ValueString(),
 		MTU:             plan.MTU.ValueInt64(),
 		Netmask:         plan.Netmask.ValueString(),
@@ -257,6 +264,7 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 
 	autostart := plan.Autostart.ValueBool()
 	bridgeVlanAware := plan.BridgeVlanAware.ValueBool()
+	comments := plan.Comments.ValueString()
 	networkRequest := proxmox.NetworkRequest{
 		Interface:       plan.Interface.ValueString(),
 		Type:            plan.Type.ValueString(),
@@ -265,7 +273,7 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 		BridgePorts:     plan.BridgePorts.ValueString(),
 		BridgeVlanAware: &bridgeVlanAware,
 		CIDR:            plan.CIDR.ValueString(),
-		Comments:        plan.Comments.ValueString(),
+		Comments:        &comments,
 		Gateway:         plan.Gateway.ValueString(),
 		MTU:             plan.MTU.ValueInt64(),
 		Netmask:         plan.Netmask.ValueString(),
