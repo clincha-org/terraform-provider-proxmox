@@ -19,7 +19,7 @@ output "edu_nodes" {
 }
 
 resource "proxmox_network" "vmbr88" {
-  interface = "vmbr22"
+  interface = "vmbr88"
   type      = "bridge"
   address = "10.2.0.34"
   netmask = "255.255.255.0"
