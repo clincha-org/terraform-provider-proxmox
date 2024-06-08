@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"strconv"
 )
 
 var (
@@ -182,7 +181,7 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 		Comments:        types.StringValue(network.Comments),
 		Gateway:         types.StringValue(network.Gateway),
 		MTU:             types.Int64Value(network.MTU),
-		Netmask:         types.StringValue(strconv.FormatInt(network.Netmask, 10)),
+		Netmask:         types.StringValue(network.Netmask),
 		VlanID:          types.Int64Value(network.VlanID),
 		Method:          types.StringValue(network.Method),
 		Active:          types.BoolValue(network.Active == 1),
@@ -229,7 +228,7 @@ func (r *networkResource) Read(ctx context.Context, request resource.ReadRequest
 		Comments:        types.StringValue(network.Comments),
 		Gateway:         types.StringValue(network.Gateway),
 		MTU:             types.Int64Value(network.MTU),
-		Netmask:         types.StringValue(strconv.FormatInt(network.Netmask, 10)),
+		Netmask:         types.StringValue(network.Netmask),
 		VlanID:          types.Int64Value(network.VlanID),
 		Method:          types.StringValue(network.Method),
 		Active:          types.BoolValue(network.Active == 1),
@@ -301,7 +300,7 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 		Comments:        types.StringValue(network.Comments),
 		Gateway:         types.StringValue(network.Gateway),
 		MTU:             types.Int64Value(network.MTU),
-		Netmask:         types.StringValue(strconv.FormatInt(network.Netmask, 10)),
+		Netmask:         types.StringValue(network.Netmask),
 		VlanID:          types.Int64Value(network.VlanID),
 		Method:          types.StringValue(network.Method),
 		Active:          types.BoolValue(network.Active == 1),
