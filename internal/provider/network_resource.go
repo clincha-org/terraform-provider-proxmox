@@ -322,6 +322,19 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 }
 
 func (r *networkResource) Delete(ctx context.Context, request resource.DeleteRequest, response *resource.DeleteResponse) {
-	//TODO implement me
-	panic("implement me")
+	var state NetworkResourceModel
+	diags := request.State.Get(ctx, &state)
+	response.Diagnostics.Append(diags...)
+	if response.Diagnostics.HasError() {
+		return
+	}
+
+	err := r.client.DeleteNetwork(&proxmox.Node{Node: "pve"}, state.Interface.ValueString())
+	if err != nil {
+		response.Diagnostics.AddError(
+			"Error deleting Proxmox network",
+			"Could not delete the Proxmox network: "+state.Interface.ValueString()+": "+err.Error(),
+		)
+		return
+	}
 }

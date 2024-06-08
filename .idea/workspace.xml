@@ -7,8 +7,6 @@
     <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="add idea">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,32 +35,36 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2hWPIazjCFPTwzM7TtihzBRxELH" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;Terraform.Apply directory provider-install-verification.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Apply.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Plan directory provider-install-verification.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;4-inconsistent-netmask-after-apply&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "Terraform.Apply directory provider-install-verification.executor": "Run",
+    "Terraform.Apply.executor": "Run",
+    "Terraform.Plan directory provider-install-verification.executor": "Run",
+    "Terraform.Plan.executor": "Run",
+    "git-widget-placeholder": "2-networks",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Terraform.Apply">
     <configuration name="Apply" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Apply" show_console_on_std_err="false" show_console_on_std_out="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="envs">
@@ -77,6 +79,24 @@
       <option name="workingDirectory" value="$PROJECT_DIR$/examples/provider-install-verification" />
       <method v="2" />
     </configuration>
+    <configuration name="Plan" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Plan" show_console_on_std_err="false" show_console_on_std_out="false">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="envs">
+        <map />
+      </option>
+      <option name="passParentEnvs" value="true" />
+      <option name="programParameters" value="plan" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <option name="workingDirectory" value="$PROJECT_DIR$/examples/provider-install-verification" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Terraform.Plan" />
+      <item itemvalue="Terraform.Apply" />
+    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -97,6 +117,8 @@
       <workItem from="1717706781879" duration="72000" />
       <workItem from="1717832557286" duration="1820000" />
       <workItem from="1717836221060" duration="1353000" />
+      <workItem from="1717844986476" duration="303000" />
+      <workItem from="1717845293282" duration="748000" />
     </task>
     <task id="LOCAL-00001" summary="add idea">
       <option name="closed" value="true" />
