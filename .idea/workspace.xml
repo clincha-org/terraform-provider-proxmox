@@ -8,9 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/node_data_source_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/node_data_source_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +25,11 @@
   </component>
   <component name="GOROOT" url="file:///usr/lib/go-1.22" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="2-networks" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -52,33 +56,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;Go Test.Test.executor&quot;: &quot;Run&quot;,
-    &quot;Go Test.TestNodeDataSource_Read in terraform-provider-proxmox/internal/provider.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;Terraform.Apply directory provider-install-verification.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Apply.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Plan directory provider-install-verification.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Plan.executor&quot;: &quot;Run&quot;,
-    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;2-networks&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/clincha/IdeaProjects/terraform-provider-proxmox/internal/provider&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Test.Test (1).executor": "Debug",
+    "Go Test.Test.executor": "Run",
+    "Go Test.TestNetworkResource_Create in terraform-provider-proxmox/internal/provider.executor": "Run",
+    "Go Test.TestNodeDataSource_Read in terraform-provider-proxmox/internal/provider.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "Terraform.Apply directory provider-install-verification.executor": "Run",
+    "Terraform.Apply.executor": "Run",
+    "Terraform.Plan directory provider-install-verification.executor": "Run",
+    "Terraform.Plan.executor": "Run",
+    "deletionFromPopupRequiresConfirmation": "false",
+    "git-widget-placeholder": "6-proxmox__network__bridge",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/clincha/IdeaProjects/terraform-provider-proxmox/internal/provider",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/provider" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/proxmox_types" />
+      <recent name="$PROJECT_DIR$/internal/proxmox_basetypes" />
+    </key>
+  </component>
   <component name="RunManager" selected="Go Test.Test">
     <configuration name="Test" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="terraform-provider-proxmox" />
