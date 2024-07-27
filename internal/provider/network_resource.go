@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -21,13 +22,13 @@ var (
 )
 
 type NetworkResourceModel struct {
+	ID              types.String `tfsdk:"id"`
 	Interface       types.String `tfsdk:"interface"`
 	Type            types.String `tfsdk:"type"`
 	Address         types.String `tfsdk:"address"`
 	Autostart       types.Bool   `tfsdk:"autostart"`
 	BridgePorts     types.String `tfsdk:"bridge_ports"`
 	BridgeVlanAware types.Bool   `tfsdk:"bridge_vlan_aware"`
-	CIDR            types.String `tfsdk:"cidr"`
 	Comments        types.String `tfsdk:"comments"`
 	Gateway         types.String `tfsdk:"gateway"`
 	MTU             types.Int64  `tfsdk:"mtu"`
@@ -75,6 +76,9 @@ func (r *networkResource) Metadata(_ context.Context, request resource.MetadataR
 func (r *networkResource) Schema(_ context.Context, _ resource.SchemaRequest, response *resource.SchemaResponse) {
 	response.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				Computed: true,
+			},
 			"interface": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
@@ -86,43 +90,41 @@ func (r *networkResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 			},
 			"address": schema.StringAttribute{
 				Optional: true,
-				Computed: true,
+				Computed: false,
 			},
 			"autostart": schema.BoolAttribute{
 				Optional: true,
-				Computed: true,
+				Computed: false,
 			},
 			"bridge_ports": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
+				Default:  stringdefault.StaticString(""),
 			},
 			"bridge_vlan_aware": schema.BoolAttribute{
-				Optional: true,
-				Computed: true,
-			},
-			"cidr": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
 			},
 			"comments": schema.StringAttribute{
 				Optional: true,
 				Computed: true,
+				Default:  stringdefault.StaticString(""),
 			},
 			"gateway": schema.StringAttribute{
 				Optional: true,
-				Computed: true,
+				Computed: false,
 			},
 			"mtu": schema.Int64Attribute{
 				Optional: true,
-				Computed: true,
+				Computed: false,
 			},
 			"netmask": schema.StringAttribute{
 				Optional: true,
-				Computed: true,
+				Computed: false,
 			},
 			"vlan_id": schema.Int64Attribute{
 				Optional: true,
-				Computed: true,
+				Computed: false,
 			},
 			"families": schema.ListAttribute{
 				Computed:    true,
@@ -146,22 +148,18 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 		return
 	}
 
-	autostart := plan.Autostart.ValueBool()
-	bridgeVlanAware := plan.BridgeVlanAware.ValueBool()
-	comments := plan.Comments.ValueString()
 	networkRequest := proxmox.NetworkRequest{
 		Interface:       plan.Interface.ValueString(),
 		Type:            plan.Type.ValueString(),
-		Address:         plan.Address.ValueString(),
-		AutoStart:       &autostart,
-		BridgePorts:     plan.BridgePorts.ValueString(),
-		BridgeVlanAware: &bridgeVlanAware,
-		CIDR:            plan.CIDR.ValueString(),
-		Comments:        &comments,
-		Gateway:         plan.Gateway.ValueString(),
-		MTU:             plan.MTU.ValueInt64(),
-		Netmask:         plan.Netmask.ValueString(),
-		VlanID:          plan.VlanID.ValueInt64(),
+		Address:         plan.Address.ValueStringPointer(),
+		AutoStart:       plan.Autostart.ValueBoolPointer(),
+		BridgePorts:     plan.BridgePorts.ValueStringPointer(),
+		BridgeVlanAware: plan.BridgeVlanAware.ValueBoolPointer(),
+		Comments:        plan.Comments.ValueString(),
+		Gateway:         plan.Gateway.ValueStringPointer(),
+		MTU:             plan.MTU.ValueInt64Pointer(),
+		Netmask:         plan.Netmask.ValueStringPointer(),
+		VlanID:          plan.VlanID.ValueInt64Pointer(),
 	}
 
 	node := proxmox.Node{
@@ -178,18 +176,18 @@ func (r *networkResource) Create(ctx context.Context, request resource.CreateReq
 	}
 
 	state := NetworkResourceModel{
+		ID:              types.StringValue(network.Interface),
 		Interface:       types.StringValue(network.Interface),
 		Type:            types.StringValue(network.Type),
-		Address:         types.StringValue(network.Address),
+		Address:         types.StringPointerValue(network.Address),
 		Autostart:       types.BoolValue(network.Autostart == 1),
-		BridgePorts:     types.StringValue(network.BridgePorts),
+		BridgePorts:     types.StringPointerValue(network.BridgePorts),
 		BridgeVlanAware: types.BoolValue(network.BridgeVlanAware == 1),
-		CIDR:            types.StringValue(network.CIDR),
 		Comments:        types.StringValue(network.Comments),
-		Gateway:         types.StringValue(network.Gateway),
-		MTU:             types.Int64Value(network.MTU),
-		Netmask:         types.StringValue(network.Netmask),
-		VlanID:          types.Int64Value(network.VlanID),
+		Gateway:         types.StringPointerValue(network.Gateway),
+		MTU:             types.Int64PointerValue(network.MTU),
+		Netmask:         types.StringPointerValue(network.Netmask),
+		VlanID:          types.Int64PointerValue(network.VlanID),
 		Method:          types.StringValue(network.Method),
 		Active:          types.BoolValue(network.Active == 1),
 	}
@@ -225,18 +223,18 @@ func (r *networkResource) Read(ctx context.Context, request resource.ReadRequest
 	}
 
 	state = NetworkResourceModel{
+		ID:              types.StringValue(network.Interface),
 		Interface:       types.StringValue(network.Interface),
 		Type:            types.StringValue(network.Type),
-		Address:         types.StringValue(network.Address),
+		Address:         types.StringPointerValue(network.Address),
 		Autostart:       types.BoolValue(network.Autostart == 1),
-		BridgePorts:     types.StringValue(network.BridgePorts),
+		BridgePorts:     types.StringPointerValue(network.BridgePorts),
 		BridgeVlanAware: types.BoolValue(network.BridgeVlanAware == 1),
-		CIDR:            types.StringValue(network.CIDR),
 		Comments:        types.StringValue(network.Comments),
-		Gateway:         types.StringValue(network.Gateway),
-		MTU:             types.Int64Value(network.MTU),
-		Netmask:         types.StringValue(network.Netmask),
-		VlanID:          types.Int64Value(network.VlanID),
+		Gateway:         types.StringPointerValue(network.Gateway),
+		MTU:             types.Int64PointerValue(network.MTU),
+		Netmask:         types.StringPointerValue(network.Netmask),
+		VlanID:          types.Int64PointerValue(network.VlanID),
 		Method:          types.StringValue(network.Method),
 		Active:          types.BoolValue(network.Active == 1),
 	}
@@ -262,22 +260,18 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 		return
 	}
 
-	autostart := plan.Autostart.ValueBool()
-	bridgeVlanAware := plan.BridgeVlanAware.ValueBool()
-	comments := plan.Comments.ValueString()
 	networkRequest := proxmox.NetworkRequest{
 		Interface:       plan.Interface.ValueString(),
 		Type:            plan.Type.ValueString(),
-		Address:         plan.Address.ValueString(),
-		AutoStart:       &autostart,
-		BridgePorts:     plan.BridgePorts.ValueString(),
-		BridgeVlanAware: &bridgeVlanAware,
-		CIDR:            plan.CIDR.ValueString(),
-		Comments:        &comments,
-		Gateway:         plan.Gateway.ValueString(),
-		MTU:             plan.MTU.ValueInt64(),
-		Netmask:         plan.Netmask.ValueString(),
-		VlanID:          plan.VlanID.ValueInt64(),
+		Address:         plan.Address.ValueStringPointer(),
+		AutoStart:       plan.Autostart.ValueBoolPointer(),
+		BridgePorts:     plan.BridgePorts.ValueStringPointer(),
+		BridgeVlanAware: plan.BridgeVlanAware.ValueBoolPointer(),
+		Comments:        plan.Comments.ValueString(),
+		Gateway:         plan.Gateway.ValueStringPointer(),
+		MTU:             plan.MTU.ValueInt64Pointer(),
+		Netmask:         plan.Netmask.ValueStringPointer(),
+		VlanID:          plan.VlanID.ValueInt64Pointer(),
 	}
 
 	node := proxmox.Node{
@@ -298,18 +292,18 @@ func (r *networkResource) Update(ctx context.Context, request resource.UpdateReq
 	tflog.Debug(ctx, fmt.Sprintf("Network (Autostart) after network update %+v", network.Autostart))
 
 	plan = NetworkResourceModel{
+		ID:              types.StringValue(network.Interface),
 		Interface:       types.StringValue(network.Interface),
 		Type:            types.StringValue(network.Type),
-		Address:         types.StringValue(network.Address),
+		Address:         types.StringPointerValue(network.Address),
 		Autostart:       types.BoolValue(network.Autostart == 1),
-		BridgePorts:     types.StringValue(network.BridgePorts),
+		BridgePorts:     types.StringPointerValue(network.BridgePorts),
 		BridgeVlanAware: types.BoolValue(network.BridgeVlanAware == 1),
-		CIDR:            types.StringValue(network.CIDR),
 		Comments:        types.StringValue(network.Comments),
-		Gateway:         types.StringValue(network.Gateway),
-		MTU:             types.Int64Value(network.MTU),
-		Netmask:         types.StringValue(network.Netmask),
-		VlanID:          types.Int64Value(network.VlanID),
+		Gateway:         types.StringPointerValue(network.Gateway),
+		MTU:             types.Int64PointerValue(network.MTU),
+		Netmask:         types.StringPointerValue(network.Netmask),
+		VlanID:          types.Int64PointerValue(network.VlanID),
 		Method:          types.StringValue(network.Method),
 		Active:          types.BoolValue(network.Active == 1),
 	}

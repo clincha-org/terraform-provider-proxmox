@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestAccOrderResource(t *testing.T) {
+func TestNetworkResource_Create(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -42,10 +42,9 @@ resource "proxmox_network" "vmbr88" {
 resource "proxmox_network" "vmbr88" {
   interface = "vmbr88"
   type      = "bridge"
-  address   = ""
-  netmask = ""
+  address   = "0.0.0.0"
+  netmask   = "255.255.255.0"
   autostart = false
-  comments = ""
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(

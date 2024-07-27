@@ -4,23 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="tidied">
-      <change afterPath="$PROJECT_DIR$/internal/provider/network_resource_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/provider/node_data_source_test.go" afterDir="false" />
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="added test, removed example code, started work on comments issues">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/example_data_source.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/example_data_source_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/example_function.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/example_function_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/example_resource.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/example_resource_test.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/node_data_source.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/node_data_source.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/provider.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/provider_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/node_data_source_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/node_data_source_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,32 +52,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Test.Test.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "Terraform.Apply directory provider-install-verification.executor": "Run",
-    "Terraform.Apply.executor": "Run",
-    "Terraform.Plan directory provider-install-verification.executor": "Run",
-    "Terraform.Plan.executor": "Run",
-    "git-widget-placeholder": "2-networks",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/clincha/IdeaProjects/terraform-provider-proxmox/internal/provider",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Test.Test.executor&quot;: &quot;Run&quot;,
+    &quot;Go Test.TestNodeDataSource_Read in terraform-provider-proxmox/internal/provider.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;Terraform.Apply directory provider-install-verification.executor&quot;: &quot;Run&quot;,
+    &quot;Terraform.Apply.executor&quot;: &quot;Run&quot;,
+    &quot;Terraform.Plan directory provider-install-verification.executor&quot;: &quot;Run&quot;,
+    &quot;Terraform.Plan.executor&quot;: &quot;Run&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;2-networks&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/clincha/IdeaProjects/terraform-provider-proxmox/internal/provider&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Terraform.Apply">
+}</component>
+  <component name="RunManager" selected="Go Test.Test">
     <configuration name="Test" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="terraform-provider-proxmox" />
       <working_directory value="$PROJECT_DIR$" />
@@ -156,7 +148,13 @@
       <workItem from="1717832557286" duration="1820000" />
       <workItem from="1717836221060" duration="1353000" />
       <workItem from="1717844986476" duration="303000" />
-      <workItem from="1717845293282" duration="5650000" />
+      <workItem from="1717845293282" duration="5674000" />
+      <workItem from="1718208557673" duration="4026000" />
+      <workItem from="1718395284938" duration="338000" />
+      <workItem from="1718395695832" duration="4077000" />
+      <workItem from="1718441090632" duration="5171000" />
+      <workItem from="1718476886339" duration="6725000" />
+      <workItem from="1722085881140" duration="607000" />
     </task>
     <task id="LOCAL-00001" summary="add idea">
       <option name="closed" value="true" />
@@ -182,7 +180,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717846213686</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added test, removed example code, started work on comments issues">
+      <option name="closed" value="true" />
+      <created>1717851956288</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1717851956288</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -192,7 +198,8 @@
     <MESSAGE value="add idea" />
     <MESSAGE value="added delete functionality" />
     <MESSAGE value="tidied" />
-    <option name="LAST_COMMIT_MESSAGE" value="tidied" />
+    <MESSAGE value="added test, removed example code, started work on comments issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="added test, removed example code, started work on comments issues" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
