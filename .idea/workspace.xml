@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="added test, removed example code, started work on comments issues">
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="fixed inconsistency issues">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/network_bridge_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +201,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717851956288</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fixed inconsistency issues">
+      <option name="closed" value="true" />
+      <created>1722108047190</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1722108047190</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,7 +220,8 @@
     <MESSAGE value="added delete functionality" />
     <MESSAGE value="tidied" />
     <MESSAGE value="added test, removed example code, started work on comments issues" />
-    <option name="LAST_COMMIT_MESSAGE" value="added test, removed example code, started work on comments issues" />
+    <MESSAGE value="fixed inconsistency issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed inconsistency issues" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

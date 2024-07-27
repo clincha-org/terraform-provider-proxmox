@@ -14,6 +14,7 @@ func TestNetworkResource_Create(t *testing.T) {
 				Config: providerConfig + `
 resource "proxmox_network_bridge" "vmbr88" {
   interface = "vmbr88"
+  node = "pve"
   address   = "192.168.1.88"
   netmask   = "255.255.255.0"
   autostart = true
@@ -35,12 +36,14 @@ resource "proxmox_network_bridge" "vmbr88" {
 				ResourceName:      "proxmox_network_bridge.vmbr88",
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateId:     "pve,vmbr88",
 			},
 			// Update and Read testing
 			{
 				Config: providerConfig + `
 resource "proxmox_network_bridge" "vmbr88" {
   interface = "vmbr88"
+  node = "pve"
   address   = "192.168.1.88"
   netmask   = "255.255.255.0"
   bridge_vlan_aware = true

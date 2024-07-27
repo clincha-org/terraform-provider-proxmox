@@ -8,8 +8,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"strings"
 )
 
 var (
@@ -21,6 +24,7 @@ var (
 type NetworkBridgeResourceModel struct {
 	ID              types.String `tfsdk:"id"`
 	Interface       types.String `tfsdk:"interface"`
+	Node            types.String `tfsdk:"node"`
 	Address         types.String `tfsdk:"address"`
 	Autostart       types.Bool   `tfsdk:"autostart"`
 	BridgePorts     types.String `tfsdk:"bridge_ports"`
@@ -39,7 +43,16 @@ type networkBridgeResource struct {
 }
 
 func (r *networkBridgeResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("interface"), request, response)
+	idParts := strings.Split(request.ID, ",")
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		response.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Expected import identifier with format: node,interface. Got: %q", request.ID),
+		)
+		return
+	}
+	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("node"), idParts[0])...)
+	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("interface"), idParts[1])...)
 }
 
 func (r *networkBridgeResource) Configure(_ context.Context, request resource.ConfigureRequest, response *resource.ConfigureResponse) {
@@ -73,6 +86,12 @@ func (r *networkBridgeResource) Schema(_ context.Context, _ resource.SchemaReque
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed: true,
+			},
+			"node": schema.StringAttribute{
+				Required: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"interface": schema.StringAttribute{
 				Required: true,
@@ -171,7 +190,7 @@ func (r *networkBridgeResource) Create(ctx context.Context, request resource.Cre
 	}
 
 	node := proxmox.Node{
-		Node: "pve",
+		Node: plan.Node.ValueString(),
 	}
 
 	network, err := r.client.CreateNetwork(&node, &networkRequest)
@@ -185,6 +204,7 @@ func (r *networkBridgeResource) Create(ctx context.Context, request resource.Cre
 
 	state := NetworkBridgeResourceModel{
 		ID:              types.StringValue(network.Interface),
+		Node:            plan.Node,
 		Interface:       types.StringValue(network.Interface),
 		Address:         types.StringPointerValue(network.Address),
 		Autostart:       types.BoolValue(network.Autostart == 1),
@@ -219,7 +239,8 @@ func (r *networkBridgeResource) Read(ctx context.Context, request resource.ReadR
 		return
 	}
 
-	network, err := r.client.GetNetwork(&proxmox.Node{Node: "pve"}, state.Interface.ValueString())
+	node := proxmox.Node{Node: state.Node.ValueString()}
+	network, err := r.client.GetNetwork(&node, state.Interface.ValueString())
 	if err != nil {
 		response.Diagnostics.AddError(
 			"Error reading Proxmox network",
@@ -230,6 +251,7 @@ func (r *networkBridgeResource) Read(ctx context.Context, request resource.ReadR
 
 	state = NetworkBridgeResourceModel{
 		ID:              types.StringValue(network.Interface),
+		Node:            types.StringValue(node.Node),
 		Interface:       types.StringValue(network.Interface),
 		Address:         types.StringPointerValue(network.Address),
 		Autostart:       types.BoolValue(network.Autostart == 1),
@@ -285,7 +307,7 @@ func (r *networkBridgeResource) Update(ctx context.Context, request resource.Upd
 	}
 
 	node := proxmox.Node{
-		Node: "pve",
+		Node: plan.Node.ValueString(),
 	}
 
 	network, err := r.client.UpdateNetwork(&node, &networkRequest)
@@ -299,6 +321,7 @@ func (r *networkBridgeResource) Update(ctx context.Context, request resource.Upd
 
 	plan = NetworkBridgeResourceModel{
 		ID:              types.StringValue(network.Interface),
+		Node:            types.StringValue(node.Node),
 		Interface:       types.StringValue(network.Interface),
 		Address:         types.StringPointerValue(network.Address),
 		Autostart:       types.BoolValue(network.Autostart == 1),
@@ -334,8 +357,8 @@ func (r *networkBridgeResource) Delete(ctx context.Context, request resource.Del
 	if response.Diagnostics.HasError() {
 		return
 	}
-
-	err := r.client.DeleteNetwork(&proxmox.Node{Node: "pve"}, state.Interface.ValueString())
+	node := proxmox.Node{Node: state.Node.ValueString()}
+	err := r.client.DeleteNetwork(&node, state.Interface.ValueString())
 	if err != nil {
 		response.Diagnostics.AddError(
 			"Error deleting Proxmox network",
