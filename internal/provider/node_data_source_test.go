@@ -9,7 +9,6 @@ func TestNodeDataSource_Read(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Read testing
 			{
 				Config: providerConfig + `data "proxmox_node" "test" {}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
