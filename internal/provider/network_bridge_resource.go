@@ -286,6 +286,32 @@ func (r *networkBridgeResource) Update(ctx context.Context, request resource.Upd
 		Comments:        plan.Comments.ValueStringPointer(),
 		Gateway:         plan.Gateway.ValueStringPointer(),
 		Netmask:         plan.Netmask.ValueStringPointer(),
+		MTU:             plan.MTU.ValueInt64Pointer(),
+	}
+
+	// We need to set the fields to nil if they are unknown
+	// This is because the Proxmox API will interpret an empty string as a value
+	// that will cause a value to be set when the intention is to omit the value.
+	if plan.Address.IsUnknown() {
+		networkRequest.Address = nil
+	}
+	if plan.BridgePorts.IsUnknown() {
+		networkRequest.BridgePorts = nil
+	}
+	if plan.BridgeVlanAware.IsUnknown() {
+		networkRequest.BridgeVlanAware = nil
+	}
+	if plan.Comments.IsUnknown() {
+		networkRequest.Comments = nil
+	}
+	if plan.Gateway.IsUnknown() {
+		networkRequest.Gateway = nil
+	}
+	if plan.MTU.IsUnknown() {
+		networkRequest.MTU = nil
+	}
+	if plan.Netmask.IsUnknown() {
+		networkRequest.Netmask = nil
 	}
 
 	node := proxmox.Node{Node: plan.Node.ValueString()}
