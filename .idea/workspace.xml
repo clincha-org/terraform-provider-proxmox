@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="fixed inconsistency issues">
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="Added node configuration">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_bridge_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -209,7 +208,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722108047190</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added node configuration">
+      <option name="closed" value="true" />
+      <created>1722115620654</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1722115620654</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +228,8 @@
     <MESSAGE value="tidied" />
     <MESSAGE value="added test, removed example code, started work on comments issues" />
     <MESSAGE value="fixed inconsistency issues" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed inconsistency issues" />
+    <MESSAGE value="Added node configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added node configuration" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

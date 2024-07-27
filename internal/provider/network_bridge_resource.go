@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"strings"
 )
 
@@ -23,8 +22,8 @@ var (
 
 type NetworkBridgeResourceModel struct {
 	ID              types.String `tfsdk:"id"`
-	Interface       types.String `tfsdk:"interface"`
 	Node            types.String `tfsdk:"node"`
+	Interface       types.String `tfsdk:"interface"`
 	Address         types.String `tfsdk:"address"`
 	Autostart       types.Bool   `tfsdk:"autostart"`
 	BridgePorts     types.String `tfsdk:"bridge_ports"`
@@ -42,17 +41,12 @@ type networkBridgeResource struct {
 	client *proxmox.Client
 }
 
-func (r *networkBridgeResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
-	idParts := strings.Split(request.ID, ",")
-	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
-		response.Diagnostics.AddError(
-			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format: node,interface. Got: %q", request.ID),
-		)
-		return
-	}
-	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("node"), idParts[0])...)
-	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("interface"), idParts[1])...)
+func NewNetworkResource() resource.Resource {
+	return &networkBridgeResource{}
+}
+
+func (r *networkBridgeResource) Metadata(_ context.Context, request resource.MetadataRequest, response *resource.MetadataResponse) {
+	response.TypeName = request.ProviderTypeName + "_network_bridge"
 }
 
 func (r *networkBridgeResource) Configure(_ context.Context, request resource.ConfigureRequest, response *resource.ConfigureResponse) {
@@ -71,14 +65,6 @@ func (r *networkBridgeResource) Configure(_ context.Context, request resource.Co
 	}
 
 	r.client = client
-}
-
-func NewNetworkResource() resource.Resource {
-	return &networkBridgeResource{}
-}
-
-func (r *networkBridgeResource) Metadata(_ context.Context, request resource.MetadataRequest, response *resource.MetadataResponse) {
-	response.TypeName = request.ProviderTypeName + "_network_bridge"
 }
 
 func (r *networkBridgeResource) Schema(_ context.Context, _ resource.SchemaRequest, response *resource.SchemaResponse) {
@@ -142,6 +128,20 @@ func (r *networkBridgeResource) Schema(_ context.Context, _ resource.SchemaReque
 	}
 }
 
+func (r *networkBridgeResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
+	// The ID is a combination of the name of the node and the name of the interface
+	idParts := strings.Split(request.ID, ",")
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		response.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Please provive the identifier in the format: node,interface. For example: pve,vmbr0. Got: %q", request.ID),
+		)
+		return
+	}
+	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("node"), idParts[0])...)
+	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("interface"), idParts[1])...)
+}
+
 func (r *networkBridgeResource) Create(ctx context.Context, request resource.CreateRequest, response *resource.CreateResponse) {
 	var plan NetworkBridgeResourceModel
 	diags := request.Plan.Get(ctx, &plan)
@@ -165,8 +165,7 @@ func (r *networkBridgeResource) Create(ctx context.Context, request resource.Cre
 
 	// We need to set the fields to nil if they are unknown
 	// This is because the Proxmox API will interpret an empty string as a value
-	// that will cause a change when the intention is to keep the value as is.
-
+	// that will cause a value to be set when the intention is to omit the value.
 	if plan.Address.IsUnknown() {
 		networkRequest.Address = nil
 	}
@@ -189,15 +188,12 @@ func (r *networkBridgeResource) Create(ctx context.Context, request resource.Cre
 		networkRequest.Netmask = nil
 	}
 
-	node := proxmox.Node{
-		Node: plan.Node.ValueString(),
-	}
-
+	node := proxmox.Node{Node: plan.Node.ValueString()}
 	network, err := r.client.CreateNetwork(&node, &networkRequest)
 	if err != nil {
 		response.Diagnostics.AddError(
-			"Error creating network",
-			"Could not create network, unexpected error: "+err.Error(),
+			"Error creating Proxmox network",
+			"Could not create the Proxmox network: "+plan.Interface.ValueString()+": "+err.Error(),
 		)
 		return
 	}
@@ -226,9 +222,6 @@ func (r *networkBridgeResource) Create(ctx context.Context, request resource.Cre
 
 	diags = response.State.Set(ctx, state)
 	response.Diagnostics.Append(diags...)
-	if response.Diagnostics.HasError() {
-		return
-	}
 }
 
 func (r *networkBridgeResource) Read(ctx context.Context, request resource.ReadRequest, response *resource.ReadResponse) {
@@ -273,9 +266,6 @@ func (r *networkBridgeResource) Read(ctx context.Context, request resource.ReadR
 
 	diags = response.State.Set(ctx, &state)
 	response.Diagnostics.Append(diags...)
-	if response.Diagnostics.HasError() {
-		return
-	}
 }
 
 func (r *networkBridgeResource) Update(ctx context.Context, request resource.UpdateRequest, response *resource.UpdateResponse) {
@@ -298,23 +288,12 @@ func (r *networkBridgeResource) Update(ctx context.Context, request resource.Upd
 		Netmask:         plan.Netmask.ValueStringPointer(),
 	}
 
-	if plan.MTU.ValueInt64Pointer() != nil {
-		if plan.MTU.IsUnknown() {
-			networkRequest.MTU = nil
-		} else {
-			networkRequest.MTU = plan.MTU.ValueInt64Pointer()
-		}
-	}
-
-	node := proxmox.Node{
-		Node: plan.Node.ValueString(),
-	}
-
+	node := proxmox.Node{Node: plan.Node.ValueString()}
 	network, err := r.client.UpdateNetwork(&node, &networkRequest)
 	if err != nil {
 		response.Diagnostics.AddError(
-			"Error creating network",
-			"Could not create network, unexpected error: "+err.Error(),
+			"Error creating Proxmox network",
+			"Could not create the Proxmox network: "+plan.Interface.ValueString()+". Got this error: "+err.Error(),
 		)
 		return
 	}
@@ -341,13 +320,8 @@ func (r *networkBridgeResource) Update(ctx context.Context, request resource.Upd
 	plan.Families, diags = types.ListValue(types.StringType, familiesStrings)
 	response.Diagnostics.Append(diags...)
 
-	tflog.Debug(ctx, fmt.Sprintf("State (Autostart) after state set %+v", plan.Autostart))
-
 	diags = response.State.Set(ctx, plan)
 	response.Diagnostics.Append(diags...)
-	if response.Diagnostics.HasError() {
-		return
-	}
 }
 
 func (r *networkBridgeResource) Delete(ctx context.Context, request resource.DeleteRequest, response *resource.DeleteResponse) {
@@ -362,7 +336,7 @@ func (r *networkBridgeResource) Delete(ctx context.Context, request resource.Del
 	if err != nil {
 		response.Diagnostics.AddError(
 			"Error deleting Proxmox network",
-			"Could not delete the Proxmox network: "+state.Interface.ValueString()+": "+err.Error(),
+			"Could not delete the Proxmox network: "+state.Interface.ValueString()+". Got this error: "+err.Error(),
 		)
 		return
 	}
