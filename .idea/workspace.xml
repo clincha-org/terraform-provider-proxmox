@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="tidy">
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="update proxmox-api version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -247,7 +247,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722169341915</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="update proxmox-api version">
+      <option name="closed" value="true" />
+      <created>1722174407223</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1722174407223</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,7 +272,8 @@
     <MESSAGE value="testing tidy" />
     <MESSAGE value="final fixes" />
     <MESSAGE value="tidy" />
-    <option name="LAST_COMMIT_MESSAGE" value="tidy" />
+    <MESSAGE value="update proxmox-api version" />
+    <option name="LAST_COMMIT_MESSAGE" value="update proxmox-api version" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
