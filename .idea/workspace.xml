@@ -4,20 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="add idea">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="update proxmox-api version">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_resource.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
   <component name="GOROOT" url="file:///usr/lib/go-1.22" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="2-networks" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -37,32 +46,66 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2hWPIazjCFPTwzM7TtihzBRxELH" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;Terraform.Apply directory provider-install-verification.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Apply.executor&quot;: &quot;Run&quot;,
-    &quot;Terraform.Plan directory provider-install-verification.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;4-inconsistent-netmask-after-apply&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Test.Test (1).executor": "Debug",
+    "Go Test.Test.executor": "Run",
+    "Go Test.TestNetworkResource_Create in terraform-provider-proxmox/internal/provider.executor": "Run",
+    "Go Test.TestNodeDataSource_Read in terraform-provider-proxmox/internal/provider.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "Terraform.Apply directory provider-install-verification.executor": "Run",
+    "Terraform.Apply.executor": "Run",
+    "Terraform.Plan directory provider-install-verification.executor": "Run",
+    "Terraform.Plan.executor": "Run",
+    "deletionFromPopupRequiresConfirmation": "false",
+    "git-widget-placeholder": "6-proxmox__network__bridge",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/clincha/IdeaProjects/terraform-provider-proxmox/internal/provider",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/provider" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/proxmox_types" />
+      <recent name="$PROJECT_DIR$/internal/proxmox_basetypes" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Terraform.Apply">
+    <configuration name="Test" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="terraform-provider-proxmox" />
+      <working_directory value="$PROJECT_DIR$" />
+      <parameters value="-count=1 -v" />
+      <envs>
+        <env name="TF_ACC" value="1" />
+      </envs>
+      <kind value="DIRECTORY" />
+      <package value="terraform-provider-proxmox" />
+      <directory value="$PROJECT_DIR$/internal/provider" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
     <configuration name="Apply" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Apply" show_console_on_std_err="false" show_console_on_std_out="false">
       <option name="allowRunningInParallel" value="false" />
       <option name="envs">
@@ -77,6 +120,25 @@
       <option name="workingDirectory" value="$PROJECT_DIR$/examples/provider-install-verification" />
       <method v="2" />
     </configuration>
+    <configuration name="Plan" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Plan" show_console_on_std_err="false" show_console_on_std_out="false">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="envs">
+        <map />
+      </option>
+      <option name="passParentEnvs" value="true" />
+      <option name="programParameters" value="plan" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <option name="workingDirectory" value="$PROJECT_DIR$/examples/provider-install-verification" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Test.Test" />
+      <item itemvalue="Terraform.Plan" />
+      <item itemvalue="Terraform.Apply" />
+    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -97,6 +159,14 @@
       <workItem from="1717706781879" duration="72000" />
       <workItem from="1717832557286" duration="1820000" />
       <workItem from="1717836221060" duration="1353000" />
+      <workItem from="1717844986476" duration="303000" />
+      <workItem from="1717845293282" duration="5674000" />
+      <workItem from="1718208557673" duration="4026000" />
+      <workItem from="1718395284938" duration="338000" />
+      <workItem from="1718395695832" duration="4077000" />
+      <workItem from="1718441090632" duration="5171000" />
+      <workItem from="1718476886339" duration="6725000" />
+      <workItem from="1722085881140" duration="607000" />
     </task>
     <task id="LOCAL-00001" summary="add idea">
       <option name="closed" value="true" />
@@ -106,7 +176,95 @@
       <option name="project" value="LOCAL" />
       <updated>1717706806955</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added delete functionality">
+      <option name="closed" value="true" />
+      <created>1717846181099</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1717846181099</updated>
+    </task>
+    <task id="LOCAL-00003" summary="tidied">
+      <option name="closed" value="true" />
+      <created>1717846213686</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1717846213686</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added test, removed example code, started work on comments issues">
+      <option name="closed" value="true" />
+      <created>1717851956288</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1717851956288</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fixed inconsistency issues">
+      <option name="closed" value="true" />
+      <created>1722108047190</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1722108047190</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added node configuration">
+      <option name="closed" value="true" />
+      <created>1722115620654</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1722115620654</updated>
+    </task>
+    <task id="LOCAL-00007" summary="cleaned network_bridge_resource.go">
+      <option name="closed" value="true" />
+      <created>1722117018765</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1722117018765</updated>
+    </task>
+    <task id="LOCAL-00008" summary="testing tidy">
+      <option name="closed" value="true" />
+      <created>1722118401794</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1722118401794</updated>
+    </task>
+    <task id="LOCAL-00009" summary="final fixes">
+      <option name="closed" value="true" />
+      <created>1722118561015</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1722118561015</updated>
+    </task>
+    <task id="LOCAL-00010" summary="tidy">
+      <option name="closed" value="true" />
+      <created>1722169341915</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1722169341915</updated>
+    </task>
+    <task id="LOCAL-00011" summary="update proxmox-api version">
+      <option name="closed" value="true" />
+      <created>1722174407223</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1722174407223</updated>
+    </task>
+    <task id="LOCAL-00012" summary="update proxmox-api version">
+      <option name="closed" value="true" />
+      <created>1722178149586</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1722178149586</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,7 +272,17 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="add idea" />
+    <MESSAGE value="added delete functionality" />
+    <MESSAGE value="tidied" />
+    <MESSAGE value="added test, removed example code, started work on comments issues" />
+    <MESSAGE value="fixed inconsistency issues" />
+    <MESSAGE value="Added node configuration" />
+    <MESSAGE value="cleaned network_bridge_resource.go" />
+    <MESSAGE value="testing tidy" />
+    <MESSAGE value="final fixes" />
+    <MESSAGE value="tidy" />
+    <MESSAGE value="update proxmox-api version" />
+    <option name="LAST_COMMIT_MESSAGE" value="update proxmox-api version" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
