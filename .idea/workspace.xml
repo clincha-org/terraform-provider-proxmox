@@ -4,19 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="final fixes">
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="tidy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GNUmakefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/data-sources/example.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/functions/example.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/resources/example.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/data-sources/scaffolding_example/data-source.tf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/provider/provider.tf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/resources/scaffolding_example/resource.tf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/tools.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,7 +239,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722118561015</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="tidy">
+      <option name="closed" value="true" />
+      <created>1722169341915</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1722169341915</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -266,7 +263,8 @@
     <MESSAGE value="cleaned network_bridge_resource.go" />
     <MESSAGE value="testing tidy" />
     <MESSAGE value="final fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="final fixes" />
+    <MESSAGE value="tidy" />
+    <option name="LAST_COMMIT_MESSAGE" value="tidy" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
