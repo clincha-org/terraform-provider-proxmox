@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="update proxmox-api version">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/examples/provider-install-verification/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/provider.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +71,7 @@
     "Terraform.Plan directory provider-install-verification.executor": "Run",
     "Terraform.Plan.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "6-proxmox__network__bridge",
+    "git-widget-placeholder": "8-create-a-vm",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "kotlin-language-version-configured": "true",

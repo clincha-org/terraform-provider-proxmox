@@ -58,8 +58,8 @@ func (r *networkBridgeResource) Configure(_ context.Context, request resource.Co
 
 	if !ok {
 		response.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *proxmox.Client, got %T. Please report this issue to the developers", request.ProviderData),
+			"network_bridge_configure",
+			fmt.Sprintf("Expected *proxmox.Client, got %T", request.ProviderData),
 		)
 		return
 	}
