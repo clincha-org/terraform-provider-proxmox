@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="update proxmox-api version">
-      <change afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" afterDir="false" />
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="createVirtualMachine">
+      <change afterPath="$PROJECT_DIR$/examples/virtual-machines/main.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/network_bridge_resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/provider.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,8 +68,10 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "Terraform.Apply directory provider-install-verification.executor": "Run",
+    "Terraform.Apply directory virtual-machines.executor": "Run",
     "Terraform.Apply.executor": "Run",
     "Terraform.Plan directory provider-install-verification.executor": "Run",
+    "Terraform.Plan directory virtual-machines.executor": "Run",
     "Terraform.Plan.executor": "Run",
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "8-create-a-vm",
@@ -93,7 +96,7 @@
       <recent name="$PROJECT_DIR$/internal/proxmox_basetypes" />
     </key>
   </component>
-  <component name="RunManager" selected="Terraform.Apply">
+  <component name="RunManager" selected="Terraform.Apply directory virtual-machines">
     <configuration name="Test" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="terraform-provider-proxmox" />
       <working_directory value="$PROJECT_DIR$" />
@@ -106,6 +109,20 @@
       <directory value="$PROJECT_DIR$/internal/provider" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Apply directory virtual-machines" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Apply" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="envs">
+        <map />
+      </option>
+      <option name="passParentEnvs" value="true" />
+      <option name="programParameters" value="apply" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <option name="workingDirectory" value="$PROJECT_DIR$/examples/virtual-machines" />
       <method v="2" />
     </configuration>
     <configuration name="Apply" type="#org.intellij.plugins.hcl.terraform.run.TerraformConfigurationType" factoryName="Terraform Apply" show_console_on_std_err="false" show_console_on_std_out="false">
@@ -140,7 +157,13 @@
       <item itemvalue="Go Test.Test" />
       <item itemvalue="Terraform.Plan" />
       <item itemvalue="Terraform.Apply" />
+      <item itemvalue="Terraform.Apply directory virtual-machines" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Terraform.Apply directory virtual-machines" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -169,6 +192,7 @@
       <workItem from="1718441090632" duration="5171000" />
       <workItem from="1718476886339" duration="6725000" />
       <workItem from="1722085881140" duration="607000" />
+      <workItem from="1722357205442" duration="2585000" />
     </task>
     <task id="LOCAL-00001" summary="add idea">
       <option name="closed" value="true" />
@@ -266,7 +290,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722178149586</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="createVirtualMachine">
+      <option name="closed" value="true" />
+      <created>1722197295812</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1722197295812</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -284,7 +316,8 @@
     <MESSAGE value="final fixes" />
     <MESSAGE value="tidy" />
     <MESSAGE value="update proxmox-api version" />
-    <option name="LAST_COMMIT_MESSAGE" value="update proxmox-api version" />
+    <MESSAGE value="createVirtualMachine" />
+    <option name="LAST_COMMIT_MESSAGE" value="createVirtualMachine" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

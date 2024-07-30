@@ -6,6 +6,7 @@ import (
 	"github.com/clincha-org/proxmox-api/pkg/proxmox"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 var (
@@ -15,8 +16,10 @@ var (
 )
 
 type virtualMachineModel struct {
-	Node string `tfsdk:"node"`
-	ID   int64  `tfsdk:"vmid"`
+	Node   types.String `tfsdk:"node"`
+	ID     types.Int64  `tfsdk:"id"`
+	Memory types.String `tfsdk:"memory"`
+	Cores  types.Int64  `tfsdk:"cores"`
 }
 
 type virtualMachineResource struct {
@@ -60,9 +63,19 @@ func (v *virtualMachineResource) Schema(ctx context.Context, request resource.Sc
 				Required:    true,
 				Description: "The node where the virtual machine is located",
 			},
-			"vmid": schema.Int64Attribute{
+			"id": schema.Int64Attribute{
 				Required:    true,
 				Description: "The virtual machine ID",
+			},
+			"memory": schema.StringAttribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "The amount of memory for the virtual machine",
+			},
+			"cores": schema.Int64Attribute{
+				Optional:    true,
+				Computed:    true,
+				Description: "The number of cores for the virtual machine",
 			},
 		},
 	}
@@ -75,9 +88,27 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		return
 	}
 
-	v.client.CreateVirtualMachine(data.Node, data.ID)
+	vmRequest := proxmox.VirtualMachineRequest{
+		ID:           data.ID.ValueInt64(),
+		Cdrom:        "local:iso/ubuntu-22.04.4-live-server-amd64.iso",
+		SCSI1:        "local-lvm:8",
+		Net1:         "model=virtio,bridge=vmbr0,firewall=1",
+		SCSIHardware: "virtio-scsi-pci",
+	}
 
-	response.Diagnostics.Append(response.State.Set(ctx, &data)...)
+	vm, err := v.client.CreateVM(data.Node.ValueString(), &vmRequest, true)
+	if err != nil {
+		return
+	}
+
+	state := virtualMachineModel{
+		Node:   data.Node,
+		ID:     data.ID,
+		Memory: types.StringValue(vm.Memory),
+		Cores:  types.Int64Value(vm.Cores),
+	}
+
+	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
 }
 
 func (v *virtualMachineResource) Read(ctx context.Context, request resource.ReadRequest, response *resource.ReadResponse) {
