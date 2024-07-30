@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="createVirtualMachine">
-      <change afterPath="$PROJECT_DIR$/examples/virtual-machines/main.tf" afterDir="false" />
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="vm creating">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,7 +188,7 @@
       <workItem from="1718441090632" duration="5171000" />
       <workItem from="1718476886339" duration="6725000" />
       <workItem from="1722085881140" duration="607000" />
-      <workItem from="1722357205442" duration="2585000" />
+      <workItem from="1722357205442" duration="3746000" />
     </task>
     <task id="LOCAL-00001" summary="add idea">
       <option name="closed" value="true" />
@@ -298,7 +294,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722197295812</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="vm creating">
+      <option name="closed" value="true" />
+      <created>1722361779447</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1722361779447</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -317,7 +321,8 @@
     <MESSAGE value="tidy" />
     <MESSAGE value="update proxmox-api version" />
     <MESSAGE value="createVirtualMachine" />
-    <option name="LAST_COMMIT_MESSAGE" value="createVirtualMachine" />
+    <MESSAGE value="vm creating" />
+    <option name="LAST_COMMIT_MESSAGE" value="vm creating" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

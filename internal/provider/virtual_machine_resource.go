@@ -112,8 +112,26 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 }
 
 func (v *virtualMachineResource) Read(ctx context.Context, request resource.ReadRequest, response *resource.ReadResponse) {
-	//TODO implement me
-	panic("implement me")
+	var state virtualMachineModel
+	response.Diagnostics.Append(request.State.Get(ctx, &state)...)
+	if response.Diagnostics.HasError() {
+		return
+	}
+
+	vm, err := v.client.GetVM(state.Node.ValueString(), state.ID.ValueInt64())
+	if err != nil {
+		response.Diagnostics.AddError("virtual_machine_read", err.Error())
+		return
+	}
+
+	vmData := virtualMachineModel{
+		Node:   state.Node,
+		ID:     state.ID,
+		Memory: types.StringValue(vm.Memory),
+		Cores:  types.Int64Value(vm.Cores),
+	}
+
+	response.Diagnostics.Append(response.State.Set(ctx, &vmData)...)
 }
 
 func (v *virtualMachineResource) Update(ctx context.Context, request resource.UpdateRequest, response *resource.UpdateResponse) {
@@ -122,6 +140,14 @@ func (v *virtualMachineResource) Update(ctx context.Context, request resource.Up
 }
 
 func (v *virtualMachineResource) Delete(ctx context.Context, request resource.DeleteRequest, response *resource.DeleteResponse) {
-	//TODO implement me
-	panic("implement me")
+	var state virtualMachineModel
+	response.Diagnostics.Append(request.State.Get(ctx, &state)...)
+	if response.Diagnostics.HasError() {
+		return
+	}
+
+	err := v.client.DeleteVM(state.Node.ValueString(), state.ID.ValueInt64())
+	if err != nil {
+		response.Diagnostics.AddError("virtual_machine_delete", err.Error())
+	}
 }
