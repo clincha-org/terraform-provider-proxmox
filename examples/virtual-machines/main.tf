@@ -13,14 +13,16 @@ provider "proxmox" {
 }
 
 resource "proxmox_virtual_machine" "vm1" {
-  node = "pve"
-  id   = 888
+  node   = "pve"
+  id     = 888
+  cores  = 1
+  memory = 512
 }
-#
-# output "cores" {
-#   value = vm1.cores
-# }
-#
-# output "memory" {
-#   value = vm1.memory
-# }
+
+output "cores" {
+  value = proxmox_virtual_machine.vm1.cores
+}
+
+output "memory" {
+  value = proxmox_virtual_machine.vm1.memory
+}
