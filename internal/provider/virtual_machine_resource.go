@@ -3,10 +3,14 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/clincha-org/proxmox-api/pkg/ide"
 	"github.com/clincha-org/proxmox-api/pkg/proxmox"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"strconv"
+	"strings"
 )
 
 var (
@@ -31,8 +35,27 @@ func NewVirtualMachineResource() resource.Resource {
 }
 
 func (v *virtualMachineResource) ImportState(ctx context.Context, request resource.ImportStateRequest, response *resource.ImportStateResponse) {
-	//TODO implement me
-	panic("implement me")
+	// The ID is a combination of the name of the node and the id of the virtual machine
+	idParts := strings.Split(request.ID, ",")
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		response.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Please provive the identifier in the format: node,vmid. For example: pve,123. Got: %q", request.ID),
+		)
+		return
+	}
+	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("node"), idParts[0])...)
+
+	// The ID needs to be converted into an integer
+	identifier, err := strconv.ParseInt(idParts[1], 10, 64)
+	if err != nil {
+		response.Diagnostics.AddError(
+			"Failed to convert import identifier",
+			fmt.Sprintf("Unable to convert the ID component of the import identifier to an integer: %s", idParts[1]),
+		)
+		return
+	}
+	response.Diagnostics.Append(response.State.SetAttribute(ctx, path.Root("id"), identifier)...)
 }
 
 func (v *virtualMachineResource) Configure(ctx context.Context, request resource.ConfigureRequest, response *resource.ConfigureResponse) {
@@ -86,17 +109,28 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		return
 	}
 
-	vmRequest := proxmox.VirtualMachineRequest{
+	cdromPath := "iso/ubuntu-24.04.1-live-server-amd64.iso"
+	cdrom := ide.InternalDataStorage{
+		ID:      2,
+		Storage: "local",
+		Path:    &cdromPath,
+	}
+	ideDevices := []ide.InternalDataStorage{cdrom}
+	scsi1 := "local-lvm:8"
+	net1 := "model=virtio,bridge=vmbr0,firewall=1"
+	scsiHardware := "virtio-scsi-pci"
+
+	vm := proxmox.VirtualMachine{
 		ID:           data.ID.ValueInt64(),
-		Cdrom:        "local:iso/ubuntu-22.04.4-live-server-amd64.iso",
-		SCSI1:        "local-lvm:8",
-		Net1:         "model=virtio,bridge=vmbr0,firewall=1",
-		SCSIHardware: "virtio-scsi-pci",
+		IDEDevices:   &ideDevices,
+		SCSI1:        &scsi1,
+		Net1:         &net1,
+		SCSIHardware: &scsiHardware,
 		Cores:        data.Cores.ValueInt64(),
 		Memory:       data.Memory.ValueInt64(),
 	}
 
-	vm, err := v.client.CreateVM(data.Node.ValueString(), &vmRequest, true)
+	vm, err := v.client.CreateVM(data.Node.ValueString(), &vm, true)
 	if err != nil {
 		response.Diagnostics.AddError("virtual_machine_create", err.Error())
 		return
@@ -136,8 +170,47 @@ func (v *virtualMachineResource) Read(ctx context.Context, request resource.Read
 }
 
 func (v *virtualMachineResource) Update(ctx context.Context, request resource.UpdateRequest, response *resource.UpdateResponse) {
-	//TODO implement me
-	panic("implement me")
+	var data virtualMachineModel
+	response.Diagnostics.Append(request.Plan.Get(ctx, &data)...)
+	if response.Diagnostics.HasError() {
+		return
+	}
+
+	cdromPath := "iso/ubuntu-24.04.1-live-server-amd64.iso"
+	cdrom := ide.InternalDataStorage{
+		ID:      2,
+		Storage: "local",
+		Path:    &cdromPath,
+	}
+	ideDevices := []ide.InternalDataStorage{cdrom}
+	scsi1 := "local-lvm:8"
+	net1 := "model=virtio,bridge=vmbr0,firewall=1"
+	scsiHardware := "virtio-scsi-pci"
+
+	vm := proxmox.VirtualMachine{
+		ID:           data.ID.ValueInt64(),
+		IDEDevices:   &ideDevices,
+		SCSI1:        &scsi1,
+		Net1:         &net1,
+		SCSIHardware: &scsiHardware,
+		Cores:        data.Cores.ValueInt64(),
+		Memory:       data.Memory.ValueInt64(),
+	}
+
+	vm, err := v.client.UpdateVM(data.Node.ValueString(), &vm)
+	if err != nil {
+		response.Diagnostics.AddError("virtual_machine_update", err.Error())
+		return
+	}
+
+	state := virtualMachineModel{
+		Node:   data.Node,
+		ID:     data.ID,
+		Memory: types.Int64Value(vm.Memory),
+		Cores:  types.Int64Value(vm.Cores),
+	}
+
+	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
 }
 
 func (v *virtualMachineResource) Delete(ctx context.Context, request resource.DeleteRequest, response *resource.DeleteResponse) {

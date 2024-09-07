@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/clincha-org/proxmox-api/pkg/proxmox"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"log/slog"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -167,7 +168,7 @@ func (p *proxmoxProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	tflog.Debug(ctx, "Creating Proxmox client")
 	// Create a new HashiCups client using the configuration values
-	client, err := proxmox.NewClient(host, username, password)
+	client, err := proxmox.NewClient(host, username, password, slog.LevelDebug)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to Create Proxmox API Client",
