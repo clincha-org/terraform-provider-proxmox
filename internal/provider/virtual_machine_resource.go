@@ -20,10 +20,19 @@ var (
 )
 
 type virtualMachineModel struct {
-	Node   types.String `tfsdk:"node"`
-	ID     types.Int64  `tfsdk:"id"`
-	Memory types.Int64  `tfsdk:"memory"`
-	Cores  types.Int64  `tfsdk:"cores"`
+	Node       types.String               `tfsdk:"node"`
+	ID         types.Int64                `tfsdk:"id"`
+	Memory     types.Int64                `tfsdk:"memory"`
+	Cores      types.Int64                `tfsdk:"cores"`
+	IDEDevices []InternalDataStorageModel `tfsdk:"ide_devices"`
+}
+
+type InternalDataStorageModel struct {
+	ID      types.Int64  `tfsdk:"id"`
+	Storage types.String `tfsdk:"storage"`
+	Path    types.String `tfsdk:"path"`
+	Media   types.String `tfsdk:"media"`
+	Size    types.String `tfsdk:"size"`
 }
 
 type virtualMachineResource struct {
@@ -98,6 +107,38 @@ func (v *virtualMachineResource) Schema(ctx context.Context, request resource.Sc
 				Required:    true,
 				Description: "The number of cores for the virtual machine",
 			},
+			"ide_devices": schema.ListNestedAttribute{
+				Optional:    true,
+				Description: "The IDE devices for the virtual machine",
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.Int64Attribute{
+							Required:    true,
+							Description: "The ID of the IDE device",
+						},
+						"storage": schema.StringAttribute{
+							Optional:    true,
+							Computed:    true,
+							Description: "The storage for the IDE device",
+						},
+						"path": schema.StringAttribute{
+							Optional:    true,
+							Computed:    true,
+							Description: "The path for the IDE device",
+						},
+						"media": schema.StringAttribute{
+							Optional:    true,
+							Computed:    true,
+							Description: "The media for the IDE device",
+						},
+						"size": schema.StringAttribute{
+							Optional:    true,
+							Computed:    true,
+							Description: "The size for the IDE device",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -109,25 +150,36 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		return
 	}
 
-	cdromPath := "iso/ubuntu-24.04.1-live-server-amd64.iso"
-	cdrom := ide.InternalDataStorage{
-		ID:      2,
-		Storage: "local",
-		Path:    &cdromPath,
-	}
-	ideDevices := []ide.InternalDataStorage{cdrom}
-	scsi1 := "local-lvm:8"
-	net1 := "model=virtio,bridge=vmbr0,firewall=1"
-	scsiHardware := "virtio-scsi-pci"
-
 	vm := proxmox.VirtualMachine{
-		ID:           data.ID.ValueInt64(),
-		IDEDevices:   &ideDevices,
-		SCSI1:        &scsi1,
-		Net1:         &net1,
-		SCSIHardware: &scsiHardware,
-		Cores:        data.Cores.ValueInt64(),
-		Memory:       data.Memory.ValueInt64(),
+		ID:     data.ID.ValueInt64(),
+		Cores:  data.Cores.ValueInt64(),
+		Memory: data.Memory.ValueInt64(),
+	}
+
+	if data.IDEDevices != nil {
+		var devices []ide.InternalDataStorage
+		for _, ideDevice := range data.IDEDevices {
+			device := ide.InternalDataStorage{
+				ID:      ideDevice.ID.ValueInt64(),
+				Storage: ideDevice.Storage.ValueString(),
+				Path:    ideDevice.Path.ValueStringPointer(),
+				Media:   ideDevice.Media.ValueStringPointer(),
+				Size:    ideDevice.Size.ValueStringPointer(),
+			}
+
+			if ideDevice.Path.IsUnknown() {
+				device.Path = nil
+			}
+			if ideDevice.Media.IsUnknown() {
+				device.Media = nil
+			}
+			if ideDevice.Size.IsUnknown() {
+				device.Size = nil
+			}
+
+			devices = append(devices, device)
+		}
+		vm.IDEDevices = &devices
 	}
 
 	vm, err := v.client.CreateVM(data.Node.ValueString(), &vm, true)
@@ -141,6 +193,21 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		ID:     data.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
+	}
+
+	if vm.IDEDevices != nil {
+		var tfdevices []InternalDataStorageModel
+		for _, device := range *vm.IDEDevices {
+			tfdevice := InternalDataStorageModel{
+				ID:      types.Int64Value(device.ID),
+				Storage: types.StringValue(device.Storage),
+				Path:    types.StringPointerValue(device.Path),
+				Media:   types.StringPointerValue(device.Media),
+				Size:    types.StringPointerValue(device.Size),
+			}
+			tfdevices = append(tfdevices, tfdevice)
+		}
+		state.IDEDevices = tfdevices
 	}
 
 	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
@@ -159,14 +226,29 @@ func (v *virtualMachineResource) Read(ctx context.Context, request resource.Read
 		return
 	}
 
-	currentState := virtualMachineModel{
+	state := virtualMachineModel{
 		Node:   expectedState.Node,
 		ID:     expectedState.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
 	}
 
-	response.Diagnostics.Append(response.State.Set(ctx, &currentState)...)
+	if vm.IDEDevices != nil {
+		var tfdevices []InternalDataStorageModel
+		for _, device := range *vm.IDEDevices {
+			tfdevice := InternalDataStorageModel{
+				ID:      types.Int64Value(device.ID),
+				Storage: types.StringValue(device.Storage),
+				Path:    types.StringPointerValue(device.Path),
+				Media:   types.StringPointerValue(device.Media),
+				Size:    types.StringPointerValue(device.Size),
+			}
+			tfdevices = append(tfdevices, tfdevice)
+		}
+		state.IDEDevices = tfdevices
+	}
+
+	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
 }
 
 func (v *virtualMachineResource) Update(ctx context.Context, request resource.UpdateRequest, response *resource.UpdateResponse) {
@@ -176,25 +258,36 @@ func (v *virtualMachineResource) Update(ctx context.Context, request resource.Up
 		return
 	}
 
-	cdromPath := "iso/ubuntu-24.04.1-live-server-amd64.iso"
-	cdrom := ide.InternalDataStorage{
-		ID:      2,
-		Storage: "local",
-		Path:    &cdromPath,
-	}
-	ideDevices := []ide.InternalDataStorage{cdrom}
-	scsi1 := "local-lvm:8"
-	net1 := "model=virtio,bridge=vmbr0,firewall=1"
-	scsiHardware := "virtio-scsi-pci"
-
 	vm := proxmox.VirtualMachine{
-		ID:           data.ID.ValueInt64(),
-		IDEDevices:   &ideDevices,
-		SCSI1:        &scsi1,
-		Net1:         &net1,
-		SCSIHardware: &scsiHardware,
-		Cores:        data.Cores.ValueInt64(),
-		Memory:       data.Memory.ValueInt64(),
+		ID:     data.ID.ValueInt64(),
+		Cores:  data.Cores.ValueInt64(),
+		Memory: data.Memory.ValueInt64(),
+	}
+
+	if data.IDEDevices != nil {
+		var devices []ide.InternalDataStorage
+		for _, ideDevice := range data.IDEDevices {
+			device := ide.InternalDataStorage{
+				ID:      ideDevice.ID.ValueInt64(),
+				Storage: ideDevice.Storage.ValueString(),
+				Path:    ideDevice.Path.ValueStringPointer(),
+				Media:   ideDevice.Media.ValueStringPointer(),
+				Size:    ideDevice.Size.ValueStringPointer(),
+			}
+
+			if ideDevice.Path.IsUnknown() {
+				device.Path = nil
+			}
+			if ideDevice.Media.IsUnknown() {
+				device.Media = nil
+			}
+			if ideDevice.Size.IsUnknown() {
+				device.Size = nil
+			}
+
+			devices = append(devices, device)
+		}
+		vm.IDEDevices = &devices
 	}
 
 	vm, err := v.client.UpdateVM(data.Node.ValueString(), &vm)
@@ -208,6 +301,21 @@ func (v *virtualMachineResource) Update(ctx context.Context, request resource.Up
 		ID:     data.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
+	}
+
+	if vm.IDEDevices != nil {
+		var tfdevices []InternalDataStorageModel
+		for _, device := range *vm.IDEDevices {
+			tfdevice := InternalDataStorageModel{
+				ID:      types.Int64Value(device.ID),
+				Storage: types.StringValue(device.Storage),
+				Path:    types.StringPointerValue(device.Path),
+				Media:   types.StringPointerValue(device.Media),
+				Size:    types.StringPointerValue(device.Size),
+			}
+			tfdevices = append(tfdevices, tfdevice)
+		}
+		state.IDEDevices = tfdevices
 	}
 
 	response.Diagnostics.Append(response.State.Set(ctx, &state)...)

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
+    <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="All but &quot;Update&quot; completed">
-      <change afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource_test.go" afterDir="false" />
+    <list default="true" id="9832d1b8-d116-47c1-be98-87897432e8aa" name="Changes" comment="basic vm tests working with IDE">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/virtual-machines/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/examples/virtual-machines/main.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/provider/provider.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/provider.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/provider/virtual_machine_resource_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/provider/virtual_machine_resource_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,10 +64,13 @@
     &quot;Go Test.Test.executor&quot;: &quot;Run&quot;,
     &quot;Go Test.TestNetworkResource_Create in terraform-provider-proxmox/internal/provider.executor&quot;: &quot;Run&quot;,
     &quot;Go Test.TestNodeDataSource_Read in terraform-provider-proxmox/internal/provider.executor&quot;: &quot;Run&quot;,
+    &quot;Go Test.Virtual Machines.executor&quot;: &quot;Run&quot;,
+    &quot;Go Test.virtual_machine_resource_test.go.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
     &quot;Terraform.Apply directory provider-install-verification.executor&quot;: &quot;Run&quot;,
     &quot;Terraform.Apply directory virtual-machines.executor&quot;: &quot;Run&quot;,
     &quot;Terraform.Apply.executor&quot;: &quot;Run&quot;,
@@ -178,8 +181,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.21829.165" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-GO-242.21829.165" />
       </set>
     </attachedChunks>
   </component>
@@ -330,6 +333,17 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add idea" />
     <MESSAGE value="added delete functionality" />
@@ -345,7 +359,8 @@
     <MESSAGE value="createVirtualMachine" />
     <MESSAGE value="vm creating" />
     <MESSAGE value="All but &quot;Update&quot; completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="All but &quot;Update&quot; completed" />
+    <MESSAGE value="basic vm tests working with IDE" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic vm tests working with IDE" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
