@@ -25,10 +25,11 @@ type virtualMachineModel struct {
 	Memory     types.Int64                `tfsdk:"memory"`
 	Cores      types.Int64                `tfsdk:"cores"`
 	IDEDevices []InternalDataStorageModel `tfsdk:"ide_devices"`
+	Clone      types.Int64                `tfsdk:"clone"`
 }
 
 type InternalDataStorageModel struct {
-	ID      types.Int64  `tfsdk:"id"`
+	ID      types.Int64  `tfsdk:"ide_id"`
 	Storage types.String `tfsdk:"storage"`
 	Path    types.String `tfsdk:"path"`
 	Media   types.String `tfsdk:"media"`
@@ -112,7 +113,7 @@ func (v *virtualMachineResource) Schema(ctx context.Context, request resource.Sc
 				Description: "The IDE devices for the virtual machine",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"id": schema.Int64Attribute{
+						"ide_id": schema.Int64Attribute{
 							Required:    true,
 							Description: "The ID of the IDE device",
 						},
@@ -138,6 +139,10 @@ func (v *virtualMachineResource) Schema(ctx context.Context, request resource.Sc
 						},
 					},
 				},
+			},
+			"clone": schema.Int64Attribute{
+				Optional:    true,
+				Description: "The ID of the virtual machine to clone",
 			},
 		},
 	}
@@ -182,10 +187,20 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		vm.IDEDevices = &devices
 	}
 
-	vm, err := v.client.CreateVM(data.Node.ValueString(), &vm, true)
-	if err != nil {
-		response.Diagnostics.AddError("virtual_machine_create", err.Error())
-		return
+	if data.Clone.ValueInt64Pointer() != nil {
+		var err error
+		vm, err = v.client.CloneVM(data.Node.ValueString(), &vm, data.Clone.ValueInt64(), true)
+		if err != nil {
+			response.Diagnostics.AddError("virtual_machine_clone", err.Error())
+			return
+		}
+	} else {
+		var err error
+		vm, err = v.client.CreateVM(data.Node.ValueString(), &vm, true)
+		if err != nil {
+			response.Diagnostics.AddError("virtual_machine_create", err.Error())
+			return
+		}
 	}
 
 	state := virtualMachineModel{
