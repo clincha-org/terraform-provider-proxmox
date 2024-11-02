@@ -15,6 +15,14 @@ github.com/clincha-org/proxmox-api v0.1.1-0.20241023194711-d6b164094c21 h1:1mgrW
 github.com/clincha-org/proxmox-api v0.1.1-0.20241023194711-d6b164094c21/go.mod h1:BKUxvxFi7AbyP7quPPdNqsm0R4obuwegueOd1hMAH8w=
 github.com/clincha-org/proxmox-api v0.1.1-0.20241025191544-626022573cc9 h1:c3iZP64IsDR0VnP5b5eCmFdcQhtXyZFIKHoyYlwarSc=
 github.com/clincha-org/proxmox-api v0.1.1-0.20241025191544-626022573cc9/go.mod h1:BKUxvxFi7AbyP7quPPdNqsm0R4obuwegueOd1hMAH8w=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102093623-2b87d0528136 h1:/U1eZQh0MgZZetbm4iiUKqFqVjT+iudB9cRWRvzQIKI=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102093623-2b87d0528136/go.mod h1:BKUxvxFi7AbyP7quPPdNqsm0R4obuwegueOd1hMAH8w=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102122800-642d5fe562d9 h1:gTKIZpph6kBS0ovtKKH3gwCVeTcKwt7/IOGxzNAtJ70=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102122800-642d5fe562d9/go.mod h1:BKUxvxFi7AbyP7quPPdNqsm0R4obuwegueOd1hMAH8w=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102123233-6dcabfb83950 h1:SKjl6mEUxvaH5BUxcDbCkXr2jovzF0i54b4/meXGIfo=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102123233-6dcabfb83950/go.mod h1:BKUxvxFi7AbyP7quPPdNqsm0R4obuwegueOd1hMAH8w=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102185457-b936de886fbb h1:1NDvAOlAh9upzoiiMjknD0fWPPI9cHwHPYQ/RYELHwg=
+github.com/clincha-org/proxmox-api v0.1.1-0.20241102185457-b936de886fbb/go.mod h1:BKUxvxFi7AbyP7quPPdNqsm0R4obuwegueOd1hMAH8w=
 github.com/cloudflare/circl v1.3.7 h1:qlCDlTPz2n9fu58M0Nh1J/JzcFpfgkFHHX3O35r5vcU=
 github.com/cloudflare/circl v1.3.7/go.mod h1:sRTcRWXGLrKw6yIGJ+l7amYJFfAXbZG0kBSc8r4zxgA=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

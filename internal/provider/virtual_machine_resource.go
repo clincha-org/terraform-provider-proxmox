@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/clincha-org/proxmox-api/pkg/ide"
 	"github.com/clincha-org/proxmox-api/pkg/proxmox"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -20,12 +22,12 @@ var (
 )
 
 type virtualMachineModel struct {
-	Node       types.String               `tfsdk:"node"`
-	ID         types.Int64                `tfsdk:"id"`
-	Memory     types.Int64                `tfsdk:"memory"`
-	Cores      types.Int64                `tfsdk:"cores"`
-	IDEDevices []InternalDataStorageModel `tfsdk:"ide_devices"`
-	Clone      types.Int64                `tfsdk:"clone"`
+	Node       types.String `tfsdk:"node"`
+	ID         types.Int64  `tfsdk:"id"`
+	Memory     types.Int64  `tfsdk:"memory"`
+	Cores      types.Int64  `tfsdk:"cores"`
+	IDEDevices types.List   `tfsdk:"ide_devices"`
+	Clone      types.Int64  `tfsdk:"clone"`
 }
 
 type InternalDataStorageModel struct {
@@ -110,6 +112,7 @@ func (v *virtualMachineResource) Schema(ctx context.Context, request resource.Sc
 			},
 			"ide_devices": schema.ListNestedAttribute{
 				Optional:    true,
+				Computed:    true,
 				Description: "The IDE devices for the virtual machine",
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -119,22 +122,18 @@ func (v *virtualMachineResource) Schema(ctx context.Context, request resource.Sc
 						},
 						"storage": schema.StringAttribute{
 							Optional:    true,
-							Computed:    true,
 							Description: "The storage for the IDE device",
 						},
 						"path": schema.StringAttribute{
 							Optional:    true,
-							Computed:    true,
 							Description: "The path for the IDE device",
 						},
 						"media": schema.StringAttribute{
 							Optional:    true,
-							Computed:    true,
 							Description: "The media for the IDE device",
 						},
 						"size": schema.StringAttribute{
 							Optional:    true,
-							Computed:    true,
 							Description: "The size for the IDE device",
 						},
 					},
@@ -161,32 +160,6 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		Memory: data.Memory.ValueInt64(),
 	}
 
-	if data.IDEDevices != nil {
-		var devices []ide.InternalDataStorage
-		for _, ideDevice := range data.IDEDevices {
-			device := ide.InternalDataStorage{
-				ID:      ideDevice.ID.ValueInt64(),
-				Storage: ideDevice.Storage.ValueString(),
-				Path:    ideDevice.Path.ValueStringPointer(),
-				Media:   ideDevice.Media.ValueStringPointer(),
-				Size:    ideDevice.Size.ValueStringPointer(),
-			}
-
-			if ideDevice.Path.IsUnknown() {
-				device.Path = nil
-			}
-			if ideDevice.Media.IsUnknown() {
-				device.Media = nil
-			}
-			if ideDevice.Size.IsUnknown() {
-				device.Size = nil
-			}
-
-			devices = append(devices, device)
-		}
-		vm.IDEDevices = &devices
-	}
-
 	if data.Clone.ValueInt64Pointer() != nil {
 		var err error
 		vm, err = v.client.CloneVM(data.Node.ValueString(), &vm, data.Clone.ValueInt64(), true)
@@ -208,6 +181,7 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		ID:     data.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
+		Clone:  data.Clone,
 	}
 
 	if vm.IDEDevices != nil {
@@ -215,14 +189,27 @@ func (v *virtualMachineResource) Create(ctx context.Context, request resource.Cr
 		for _, device := range *vm.IDEDevices {
 			tfdevice := InternalDataStorageModel{
 				ID:      types.Int64Value(device.ID),
-				Storage: types.StringValue(device.Storage),
+				Storage: types.StringPointerValue(device.Storage),
 				Path:    types.StringPointerValue(device.Path),
 				Media:   types.StringPointerValue(device.Media),
 				Size:    types.StringPointerValue(device.Size),
 			}
 			tfdevices = append(tfdevices, tfdevice)
 		}
-		state.IDEDevices = tfdevices
+		var diagnostics diag.Diagnostics
+		state.IDEDevices, diagnostics = types.ListValueFrom(ctx, types.ObjectType{
+			AttrTypes: map[string]attr.Type{
+				"ide_id":  types.Int64Type,
+				"storage": types.StringType,
+				"path":    types.StringType,
+				"media":   types.StringType,
+				"size":    types.StringType,
+			},
+		}, tfdevices)
+		if diagnostics.HasError() {
+			response.Diagnostics.Append(diagnostics...)
+			return
+		}
 	}
 
 	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
@@ -246,6 +233,7 @@ func (v *virtualMachineResource) Read(ctx context.Context, request resource.Read
 		ID:     expectedState.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
+		Clone:  types.Int64Value(100),
 	}
 
 	if vm.IDEDevices != nil {
@@ -253,14 +241,27 @@ func (v *virtualMachineResource) Read(ctx context.Context, request resource.Read
 		for _, device := range *vm.IDEDevices {
 			tfdevice := InternalDataStorageModel{
 				ID:      types.Int64Value(device.ID),
-				Storage: types.StringValue(device.Storage),
+				Storage: types.StringPointerValue(device.Storage),
 				Path:    types.StringPointerValue(device.Path),
 				Media:   types.StringPointerValue(device.Media),
 				Size:    types.StringPointerValue(device.Size),
 			}
 			tfdevices = append(tfdevices, tfdevice)
 		}
-		state.IDEDevices = tfdevices
+		var diagnostics diag.Diagnostics
+		state.IDEDevices, diagnostics = types.ListValueFrom(ctx, types.ObjectType{
+			AttrTypes: map[string]attr.Type{
+				"ide_id":  types.Int64Type,
+				"storage": types.StringType,
+				"path":    types.StringType,
+				"media":   types.StringType,
+				"size":    types.StringType,
+			},
+		}, tfdevices)
+		if diagnostics.HasError() {
+			response.Diagnostics.Append(diagnostics...)
+			return
+		}
 	}
 
 	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
@@ -279,31 +280,26 @@ func (v *virtualMachineResource) Update(ctx context.Context, request resource.Up
 		Memory: data.Memory.ValueInt64(),
 	}
 
-	if data.IDEDevices != nil {
-		var devices []ide.InternalDataStorage
-		for _, ideDevice := range data.IDEDevices {
-			device := ide.InternalDataStorage{
-				ID:      ideDevice.ID.ValueInt64(),
-				Storage: ideDevice.Storage.ValueString(),
-				Path:    ideDevice.Path.ValueStringPointer(),
-				Media:   ideDevice.Media.ValueStringPointer(),
-				Size:    ideDevice.Size.ValueStringPointer(),
-			}
-
-			if ideDevice.Path.IsUnknown() {
-				device.Path = nil
-			}
-			if ideDevice.Media.IsUnknown() {
-				device.Media = nil
-			}
-			if ideDevice.Size.IsUnknown() {
-				device.Size = nil
-			}
-
-			devices = append(devices, device)
-		}
-		vm.IDEDevices = &devices
+	ideDeviceModels := make([]InternalDataStorageModel, 0, len(data.IDEDevices.Elements()))
+	diags := data.IDEDevices.ElementsAs(ctx, &ideDeviceModels, false)
+	if diags.HasError() {
+		response.Diagnostics.AddError("virtual_machine_update", "Failed to convert ide_devices to internal representation")
+		response.Diagnostics.Append(diags...)
+		return
 	}
+
+	var ideDevices []ide.InternalDataStorage
+	for _, ideDeviceModel := range ideDeviceModels {
+		ideDevice := ide.InternalDataStorage{
+			ID:      ideDeviceModel.ID.ValueInt64(),
+			Storage: ideDeviceModel.Storage.ValueStringPointer(),
+			Path:    ideDeviceModel.Path.ValueStringPointer(),
+			Media:   ideDeviceModel.Media.ValueStringPointer(),
+			Size:    ideDeviceModel.Size.ValueStringPointer(),
+		}
+		ideDevices = append(ideDevices, ideDevice)
+	}
+	vm.IDEDevices = &ideDevices
 
 	vm, err := v.client.UpdateVM(data.Node.ValueString(), &vm)
 	if err != nil {
@@ -316,6 +312,7 @@ func (v *virtualMachineResource) Update(ctx context.Context, request resource.Up
 		ID:     data.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
+		Clone:  data.Clone,
 	}
 
 	if vm.IDEDevices != nil {
@@ -323,16 +320,28 @@ func (v *virtualMachineResource) Update(ctx context.Context, request resource.Up
 		for _, device := range *vm.IDEDevices {
 			tfdevice := InternalDataStorageModel{
 				ID:      types.Int64Value(device.ID),
-				Storage: types.StringValue(device.Storage),
+				Storage: types.StringPointerValue(device.Storage),
 				Path:    types.StringPointerValue(device.Path),
 				Media:   types.StringPointerValue(device.Media),
 				Size:    types.StringPointerValue(device.Size),
 			}
 			tfdevices = append(tfdevices, tfdevice)
 		}
-		state.IDEDevices = tfdevices
+		var diagnostics diag.Diagnostics
+		state.IDEDevices, diagnostics = types.ListValueFrom(ctx, types.ObjectType{
+			AttrTypes: map[string]attr.Type{
+				"ide_id":  types.Int64Type,
+				"storage": types.StringType,
+				"path":    types.StringType,
+				"media":   types.StringType,
+				"size":    types.StringType,
+			},
+		}, tfdevices)
+		if diagnostics.HasError() {
+			response.Diagnostics.Append(diagnostics...)
+			return
+		}
 	}
-
 	response.Diagnostics.Append(response.State.Set(ctx, &state)...)
 }
 

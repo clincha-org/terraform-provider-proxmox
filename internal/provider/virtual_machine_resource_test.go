@@ -71,6 +71,23 @@ resource "proxmox_virtual_machine" "vm1" {
   cores  = 2
   memory = 4096
   clone = 100
+  ide_devices = [
+	{
+		ide_id = 0
+		storage = "local-lvm"
+		size = "4M"
+        path = "vm-888-cloudinit"
+        media = "cdrom"
+    },
+	{
+		ide_id = 2
+        media = "cdrom"
+    },
+	{	
+		ide_id = 3
+		media = "cdrom"
+    }
+  ]
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -91,6 +108,24 @@ resource "proxmox_virtual_machine" "vm1" {
   id     = 888
   cores  = 1
   memory = 1024
+  clone  = 100
+  ide_devices = [
+	{
+		ide_id = 0
+		storage = "local-lvm"
+		size = "4M"
+        path = "vm-888-cloudinit"
+        media = "cdrom"
+    },
+	{
+		ide_id = 2
+        media = "cdrom"
+    },
+	{	
+		ide_id = 3
+		media = "cdrom"
+    }
+  ]
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
