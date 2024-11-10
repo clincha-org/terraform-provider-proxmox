@@ -3,7 +3,7 @@ module terraform-provider-proxmox
 go 1.22
 
 require (
-	github.com/clincha-org/proxmox-api v0.1.1-0.20241102185457-b936de886fbb
+	github.com/clincha-org/proxmox-api v0.1.1-0.20241110142156-322007ec191b
 	github.com/hashicorp/terraform-plugin-framework v1.8.0
 	github.com/hashicorp/terraform-plugin-go v0.22.2
 	github.com/hashicorp/terraform-plugin-log v0.9.0

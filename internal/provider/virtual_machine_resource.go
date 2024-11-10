@@ -233,7 +233,7 @@ func (v *virtualMachineResource) Read(ctx context.Context, request resource.Read
 		ID:     expectedState.ID,
 		Memory: types.Int64Value(vm.Memory),
 		Cores:  types.Int64Value(vm.Cores),
-		Clone:  types.Int64Value(100),
+		Clone:  types.Int64PointerValue(vm.Parent),
 	}
 
 	if vm.IDEDevices != nil {
